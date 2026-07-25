@@ -28,11 +28,11 @@ AISecLearn 是一个面向高校学生的 **AI + 网络安全学习平台**，�
 
 ## 👥 团队分工
 
-| 成员 | 专业 | 负责 |
-| --- | --- | --- |
-| 李欣键 | 人工智能 | React 前端 · AI 功能 · UI/UX · React Bits |
-| （计算机专业） | 计算机科学 | FastAPI 后端 · MySQL 数据库 · Redis · API 开发 |
-| （网络安全专业） | 网络安全 | 安全实验靶场 · 代码分析 · 日志分析 · 漏洞知识库 |
+| 成员 | 专业 | 负责 | GitHub |
+| --- | --- | --- | --- |
+| 李欣键 | 人工智能 | React 前端 · AI 功能 · UI/UX · React Bits | [@lixinjian5](https://github.com/lixinjian5) |
+| 邓卓言 | 计算机科学 | FastAPI 后端 · MySQL 数据库 · Redis · API 开发 | — |
+| 刘梓欣 | 网络安全 | 安全实验靶场 · 代码分析 · 日志分析 · 漏洞知识库 | — |
 
 ## 📁 项目结构（规划）
 
