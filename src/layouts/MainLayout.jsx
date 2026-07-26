@@ -4,14 +4,11 @@ import Header from '../components/layout/Header'
 
 export default function MainLayout() {
   return (
-    <div className="flex h-screen overflow-hidden bg-gray-950">
-      {/* 左侧 Sidebar */}
+    <div className="flex h-screen overflow-hidden bg-[#0a0a12]">
       <Sidebar />
-
-      {/* 右侧主区域 */}
       <div className="flex flex-1 flex-col overflow-hidden">
         <Header />
-        <main className="flex-1 overflow-y-auto p-6">
+        <main className="flex-1 overflow-y-auto">
           <Outlet />
         </main>
       </div>

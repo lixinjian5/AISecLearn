@@ -30,7 +30,7 @@ export default function AITutor() {
   }
 
   return (
-    <div className="flex h-full gap-0 -m-6">
+    <div className="flex h-full gap-0">
       {/* ===== 左栏：导师信息 ===== */}
       <aside className="w-[260px] shrink-0 border-r border-gray-800/40 p-4 flex flex-col gap-4">
         <SpotlightCard className="!rounded-2xl !p-5 !bg-gray-900/80 !border-gray-800/40" spotlightColor="rgba(99, 102, 241, 0.20)">

@@ -1,5 +1,5 @@
 import { NavLink, useLocation } from 'react-router-dom'
-import Threads from '../react-bits/Threads'
+import Particles from '../react-bits/Particles'
 import Magnet from '../react-bits/Magnet'
 
 // 导航项配置
@@ -58,9 +58,17 @@ export default function Sidebar() {
 
   return (
     <aside className="w-[260px] shrink-0 flex flex-col border-r border-gray-800/30 bg-gray-900/60 backdrop-blur-xl relative overflow-hidden">
-      {/* React Bits Threads — 网络安全网络线条背景 */}
-      <div className="absolute inset-0 opacity-[0.10] pointer-events-none">
-        <Threads color={[0.4, 0.5, 1.0]} amplitude={1.2} distance={0.15} />
+      {/* React Bits Particles — 粒子背景 */}
+      <div className="absolute inset-0 opacity-[0.15] pointer-events-none">
+        <Particles
+          particleColors={['#6366f1', '#06b6d4', '#8b5cf6']}
+          particleCount={120}
+          particleSpread={8}
+          speed={0.05}
+          particleBaseSize={80}
+          sizeRandomness={0.8}
+          cameraDistance={18}
+        />
       </div>
       <div className="absolute inset-0 bg-gradient-to-b from-gray-900/40 via-transparent to-gray-900/90 pointer-events-none" />
 
