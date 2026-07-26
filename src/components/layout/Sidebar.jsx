@@ -28,7 +28,7 @@ const bottomNavItems = [
 function NavItem({ to, label, icon: Icon }) {
   return (
     <ClickBurst className="w-full">
-      <Magnet padding={80} magnetStrength={6} wrapperClassName="w-full">
+      <Magnet padding={80} magnetStrength={30} wrapperClassName="w-full">
         <NavLink
           to={to}
           className={({ isActive }) =>
