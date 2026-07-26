@@ -1,7 +1,8 @@
-import { NavLink, useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import Particles from '../react-bits/Particles'
 import Magnet from '../react-bits/Magnet'
 import ClickBurst from '../react-bits/ClickBurst'
+import SpecularButton from '../react-bits/SpecularButton'
 // 导航项配置
 const mainNavItems = [
   { to: '/dashboard',       label: '首页',       icon: HomeIcon },
@@ -26,22 +27,28 @@ const bottomNavItems = [
 ]
 
 function NavItem({ to, label, icon: Icon }) {
+  const navigate = useNavigate()
   return (
     <ClickBurst className="w-full">
       <Magnet padding={80} magnetStrength={30} wrapperClassName="w-full">
-        <NavLink
-          to={to}
-          className={({ isActive }) =>
-            `flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200
-            ${isActive
-              ? 'bg-primary-600/20 text-primary-400 border-l-2 border-primary-500'
-              : 'text-gray-400 hover:text-gray-200 hover:bg-white/5 border-l-2 border-transparent'
-            }`
-          }
+        <SpecularButton
+          as="div"
+          size="sm"
+          radius={10}
+          lineColor="#818cf8"
+          baseColor="#1e1b4b"
+          textColor="#c7d2fe"
+          intensity={0.8}
+          shineSize={15}
+          thickness={1}
+          speed={0.2}
+          autoAnimate={true}
+          onClick={() => navigate(to)}
+          className="w-full !justify-start !px-4 !py-2.5 !text-sm !font-medium"
         >
           <Icon className="w-5 h-5 shrink-0" />
-          <span>{label}</span>
-        </NavLink>
+          <span className="ml-3">{label}</span>
+        </SpecularButton>
       </Magnet>
     </ClickBurst>
   )
