@@ -43,14 +43,14 @@
 
 ### 核心功能规划
 
-1. **AI 安全导师** — 智能问答、自适应教学
+1. **AI 安全导师** — 智能问答、自适应教学（✅ 已实现）
 2. **课程学习中心** — Web 安全、网络攻防、代码审计
 3. **在线练习 & AI 批改** — 自动出题、智能批改、错题记录
-4. **安全靶场** — SQL 注入、XSS、文件上传、认证绕过等实战实验
+4. **安全靶场** — SQL 注入、XSS、文件上传、认证绕过
 5. **AI 代码安全分析** — 提交代码获得漏洞检测与修复建议
-6. **AI 日志分析** — 服务器日志智能分析，识别攻击行为
-7. **学习数据追踪** — 学习时间、正确率、能力雷达图、进度趋势
-8. **用户系统** — 注册/登录、个人中心、学习等级
+6. **AI 日志分析** — 服务器日志智能分析
+7. **学习数据追踪** — Dashboard 看板（✅ 已实现）
+8. **用户系统** — 注册/登录、个人中心
 
 ---
 
@@ -68,11 +68,12 @@
 
 | 层级 | 技术 |
 | --- | --- |
-| **前端** | React 18 · Vite · Tailwind CSS v3.4 · React Router v6 · React Bits |
+| **前端** | React 18 · Vite · Tailwind CSS v3.4 · React Router v6 · React Bits（12 组件） |
 | **后端** | Python · FastAPI（待开发） |
 | **数据库** | MySQL · Redis（待开发） |
-| **AI** | DeepSeek API · Prompt Engineering · RAG（待开发） |
+| **AI** | DeepSeek API · Prompt Engineering |
 | **部署** | Linux · Docker · Nginx（待开发） |
+| **依赖** | framer-motion · gsap · ogl |
 
 ---
 
@@ -80,31 +81,34 @@
 
 ```
 D:\project1\aianquan\
+├── PROJECT_CONTEXT.md
 ├── README.md
-├── PROJECT_CONTEXT.md          ← 你正在看的文件
-├── .gitignore
+├── .env.example
 ├── index.html
 ├── package.json
 ├── vite.config.js
 ├── tailwind.config.js
-├── postcss.config.js
+├── docs/
+│   └── api-architecture.md       ← 多模式 API 架构设计
 ├── public/
 └── src/
-    ├── main.jsx                ← React 入口
+    ├── main.jsx
     ├── App.jsx
-    ├── index.css               ← Tailwind 入口 + 全局样式
-    ├── router/
-    │   └── index.jsx           ← 16 条路由
-    ├── layouts/
-    │   └── MainLayout.jsx      ← Sidebar + Header + 内容区
+    ├── index.css
+    ├── router/index.jsx           ← 16 条路由
+    ├── layouts/MainLayout.jsx
     ├── components/
-    │   └── layout/
-    │       ├── Sidebar.jsx     ← Logo、导航、用户信息
-    │       └── Header.jsx      ← 页面标题、日期、通知
-    ├── pages/                  ← 空，各页面待开发
-    ├── hooks/                  ← 空
-    ├── utils/                  ← 空
-    └── assets/                 ← 空
+    │   ├── layout/
+    │   │   ├── Sidebar.jsx        ← Particles + Threads + Magnet + ClickBurst
+    │   │   └── Header.jsx         ← ShinyText + 渐变光条
+    │   └── react-bits/            ← 12 个 React Bits 组件
+    ├── pages/
+    │   ├── AITutor/AITutor.jsx    ← AI 导师（✅）
+    │   └── Dashboard/Dashboard.jsx← 首页看板（✅）
+    ├── services/aiService.js      ← AI 调用抽象层
+    ├── hooks/useChat.js           ← 聊天状态管理
+    ├── utils/aiTutorPrompt.js     ← 朋友型导师 Prompt
+    └── assets/
 ```
 
 ---
@@ -118,8 +122,6 @@ D:\project1\aianquan\
 | `dev/backend` | 邓倬言 — 后端 | ✅ |
 | `dev/security` | 刘梓欣 — 安全 | ✅ |
 
-**规则**：禁止直接 push 到 main，所有代码通过 Pull Request 合并。
-
 ---
 
 ## 📋 开发进度
@@ -128,31 +130,22 @@ D:\project1\aianquan\
 
 | 日期 | 内容 |
 | --- | --- |
-| 2026-07-25 | Vite + React 项目创建 |
-| 2026-07-25 | Tailwind CSS v3 配置（primary + cyber 色系） |
-| 2026-07-25 | React Router v6 配置，16 条路由 |
-| 2026-07-25 | MainLayout 布局：Sidebar + Header + 内容区 |
-| 2026-07-25 | Sidebar：Logo、9 导航项、用户底栏 |
-| 2026-07-25 | Header：动态标题、日期、通知铃铛、头像 |
-| 2026-07-25 | Git 初始化 + GitHub 仓库创建 |
-| 2026-07-25 | 4 分支创建（main / dev/frontend / dev/backend / dev/security）|
-| 2026-07-25 | 23 个 Issues 创建（frontend×6 / backend×6 / security×6 / ai×5）|
-| 2026-07-25 | README.md 完整（项目介绍、技术栈、团队分工）|
+| 2026-07-25 | Vite + React + Tailwind + React Router 项目创建 |
+| 2026-07-25 | MainLayout 布局（Sidebar + Header） + 16 路由 |
+| 2026-07-25 | Git + GitHub 仓库 + 4 分支 + 23 Issues |
+| 2026-07-25 | **12 个 React Bits 组件集成** |
+| 2026-07-25 | **AI 导师页面**：三栏布局 + DeepSeek API + 朋友型 Prompt |
+| 2026-07-25 | **Dashboard 首页**：9 组件集成（欢迎区+统计+AI助手+趋势+错题） |
+| 2026-07-25 | **UI 升级**：Sidebar 双层特效 + Header 光泽标题 |
+| 2026-07-25 | 多模式 API 架构文档 |
+| 2026-07-25 | 三份团队手册（桌面） |
 
-### 🔜 下一步（MVP 策略）
+### 🔜 下一步
 
-**开发方式**：vibe coding（AI 写大部分代码，我们审+改）
-
-**MVP 核心模块**（按优先级）：
-1. **AI 导师页面** — 三栏布局 + DeepSeek API 对话 + 朋友型 Prompt
-2. **Dashboard** — 统计卡片、欢迎区
-3. **题库 + 练习 + 错题** — 选择题、AI 批改
-4. **课程列表** — 课程卡片
-5. **部署** — 华为云服务器上线
-
-**MVP 砍掉**：注册/登录、靶场、日志分析、后台管理（以后再加）
-
-**原则**：没做好的页面保留入口，显示"正在开发中"
+1. **课程列表页面** — 课程卡片
+2. **题库 + 练习页面** — 选择题、AI 批改
+3. **代码安全分析页面** — 上传代码 → AI 分析
+4. **部署** — 服务器上线
 
 ---
 
@@ -160,15 +153,25 @@ D:\project1\aianquan\
 
 ### 2026-07-25
 
-**完成**：项目地基 + 布局框架 + GitHub 团队仓库
+**完成内容**：
+- 项目地基：Vite + React + Tailwind + React Router
+- 布局框架：Sidebar + Header + MainLayout
+- GitHub 仓库：4 分支、23 Issues、团队手册
+- React Bits：12 个组件全部转入项目（Particles、Threads、SpotlightCard、GradientText、Counter、Magnet、ShinyText、FadeContent、BorderGlow、TiltedCard、ClickBurst、SpecularButton）
+- AI 导师页面：三栏布局，接入 DeepSeek API，朋友型 System Prompt，抽象层 aiService.js
+- Dashboard：欢迎区 + 4 统计卡片（Counter） + 继续学习 + AI 助手（BorderGlow） + 趋势图 + 错题列表
+- UI 氛围：Sidebar Particles + Threads 双层特效；Header ShinyText + 渐变光条；导航 Magnet + ClickBurst
+- 架构文档：AI 多模式调用方案（免费/自定义Key/管理员）
+- 桌面三份手册：前端（李欣键）、后端（邓倬言）、安全（刘梓欣）
 
-**修改文件**：15 个文件，3343 行代码
+**修改文件**：26 个文件，2258 行新增代码
 
 **关键决策**：
-- 前端选 React 而非 Vue3（React Bits 组件库生态更好）
-- Tailwind v3 而非 v4（v3 教程多，React Bits 官方兼容）
-- 分支保护：main 必须通过 PR 合并
+- React 而非 Vue3（React Bits 生态）
+- Tailwind v3 而非 v4（稳定 + 官方兼容）
+- AI 调用走抽象层（后续切后端只改 aiService.js）
+- MVP 策略：核心 3-4 功能做精，其余写"正在开发中"
 
-**当前状态**：布局完成，16 页面占位，准备开发 Dashboard
+**当前状态**：AI 导师可对话、Dashboard 可用、其余占位
 
-**下一步**：阶段 3 — Dashboard 首页
+**下一步**：课程列表 + 题库练习
