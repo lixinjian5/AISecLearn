@@ -1,4 +1,5 @@
 import { NavLink, useLocation } from 'react-router-dom'
+import Threads from '../react-bits/Threads'
 
 // 导航项配置
 const mainNavItems = [
@@ -23,7 +24,6 @@ const bottomNavItems = [
   { to: '/profile',  label: '用户中心', icon: UserIcon },
 ]
 
-// 导航链接组件
 function NavItem({ to, label, icon: Icon }) {
   return (
     <NavLink
@@ -32,7 +32,7 @@ function NavItem({ to, label, icon: Icon }) {
         `flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200
         ${isActive
           ? 'bg-primary-600/20 text-primary-400 border-l-2 border-primary-500'
-          : 'text-gray-400 hover:text-gray-200 hover:bg-gray-800/60 border-l-2 border-transparent'
+          : 'text-gray-400 hover:text-gray-200 hover:bg-white/5 border-l-2 border-transparent'
         }`
       }
     >
@@ -42,10 +42,9 @@ function NavItem({ to, label, icon: Icon }) {
   )
 }
 
-// 分组标题
 function NavGroup({ label }) {
   return (
-    <p className="px-4 pt-5 pb-1.5 text-xs font-semibold uppercase tracking-wider text-gray-600">
+    <p className="px-4 pt-5 pb-1.5 text-xs font-semibold uppercase tracking-wider text-gray-500">
       {label}
     </p>
   )
@@ -55,58 +54,63 @@ export default function Sidebar() {
   const location = useLocation()
 
   return (
-    <aside className="w-[260px] shrink-0 flex flex-col border-r border-gray-800/60 bg-gray-950/80 backdrop-blur-xl">
-      {/* Logo */}
-      <div className="h-16 flex items-center gap-3 px-5 border-b border-gray-800/40">
-        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary-500 to-cyber-500 flex items-center justify-center">
-          <ShieldIcon className="w-5 h-5 text-white" />
-        </div>
-        <div>
-          <span className="text-lg font-bold text-white tracking-tight">AISec</span>
-          <span className="text-lg font-bold bg-gradient-to-r from-primary-400 to-cyber-400 bg-clip-text text-transparent">Learn</span>
-        </div>
+    <aside className="w-[260px] shrink-0 flex flex-col border-r border-gray-800/30 bg-gray-900/60 backdrop-blur-xl relative overflow-hidden">
+      {/* React Bits Threads — 网络安全网络线条背景 */}
+      <div className="absolute inset-0 opacity-[0.10] pointer-events-none">
+        <Threads color={[0.4, 0.5, 1.0]} amplitude={1.2} distance={0.15} />
       </div>
+      <div className="absolute inset-0 bg-gradient-to-b from-gray-900/40 via-transparent to-gray-900/90 pointer-events-none" />
 
-      {/* 导航菜单 */}
-      <nav className="flex-1 overflow-y-auto py-3 space-y-0.5">
-        {/* 主导航 */}
-        <div className="space-y-0.5 px-3">
-          {mainNavItems.map(item => (
-            <NavItem key={item.to} {...item} />
-          ))}
-        </div>
-
-        {/* AI 安全分析 */}
-        <NavGroup label="AI 安全分析" />
-        <div className="space-y-0.5 px-3">
-          {analysisNavItems.map(item => (
-            <NavItem key={item.to} {...item} />
-          ))}
-        </div>
-
-        {/* 学习记录 */}
-        <NavGroup label="学习记录" />
-        <div className="space-y-0.5 px-3">
-          {recordNavItems.map(item => (
-            <NavItem key={item.to} {...item} />
-          ))}
-        </div>
-      </nav>
-
-      {/* 底部用户区 */}
-      <div className="border-t border-gray-800/40 px-3 py-3 space-y-0.5">
-        {bottomNavItems.map(item => (
-          <NavItem key={item.to} {...item} />
-        ))}
-
-        {/* 用户信息条 */}
-        <div className="flex items-center gap-3 px-4 py-2.5 mt-1 rounded-lg">
-          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center text-white text-xs font-bold">
-            L
+      {/* 内容区 — 在 WebGL 背景之上 */}
+      <div className="relative z-10 flex flex-col h-full">
+        {/* Logo */}
+        <div className="h-16 flex items-center gap-3 px-5 border-b border-gray-800/30">
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary-500 to-cyber-500 flex items-center justify-center shadow-lg shadow-primary-500/20">
+            <ShieldIcon className="w-5 h-5 text-white" />
           </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-gray-300 truncate">李欣键</p>
-            <p className="text-xs text-gray-600">Lv.12 · 安全学徒</p>
+          <div>
+            <span className="text-lg font-bold text-white tracking-tight">AISec</span>
+            <span className="text-lg font-bold bg-gradient-to-r from-primary-400 to-cyber-400 bg-clip-text text-transparent">Learn</span>
+          </div>
+        </div>
+
+        {/* 导航菜单 */}
+        <nav className="flex-1 overflow-y-auto py-3 space-y-0.5">
+          <div className="space-y-0.5 px-3">
+            {mainNavItems.map(item => (
+              <NavItem key={item.to} {...item} />
+            ))}
+          </div>
+
+          <NavGroup label="AI 安全分析" />
+          <div className="space-y-0.5 px-3">
+            {analysisNavItems.map(item => (
+              <NavItem key={item.to} {...item} />
+            ))}
+          </div>
+
+          <NavGroup label="学习记录" />
+          <div className="space-y-0.5 px-3">
+            {recordNavItems.map(item => (
+              <NavItem key={item.to} {...item} />
+            ))}
+          </div>
+        </nav>
+
+        {/* 底部 */}
+        <div className="border-t border-gray-800/30 px-3 py-3 space-y-0.5">
+          {bottomNavItems.map(item => (
+            <NavItem key={item.to} {...item} />
+          ))}
+
+          <div className="flex items-center gap-3 px-4 py-2.5 mt-1 rounded-lg bg-white/[0.03]">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center text-white text-xs font-bold shadow-lg shadow-primary-500/20">
+              L
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-gray-300 truncate">李欣键</p>
+              <p className="text-xs text-gray-500">Lv.12 · 安全学徒</p>
+            </div>
           </div>
         </div>
       </div>
@@ -114,7 +118,7 @@ export default function Sidebar() {
   )
 }
 
-// -------- SVG 图标组件 --------
+// -------- SVG 图标 --------
 function HomeIcon({ className }) {
   return (
     <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
@@ -122,7 +126,6 @@ function HomeIcon({ className }) {
     </svg>
   )
 }
-
 function AIIcon({ className }) {
   return (
     <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
@@ -130,7 +133,6 @@ function AIIcon({ className }) {
     </svg>
   )
 }
-
 function BookIcon({ className }) {
   return (
     <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
@@ -138,7 +140,6 @@ function BookIcon({ className }) {
     </svg>
   )
 }
-
 function TargetIcon({ className }) {
   return (
     <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
@@ -146,7 +147,6 @@ function TargetIcon({ className }) {
     </svg>
   )
 }
-
 function ShieldIcon({ className }) {
   return (
     <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
@@ -154,7 +154,6 @@ function ShieldIcon({ className }) {
     </svg>
   )
 }
-
 function CodeIcon({ className }) {
   return (
     <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
@@ -162,7 +161,6 @@ function CodeIcon({ className }) {
     </svg>
   )
 }
-
 function FileIcon({ className }) {
   return (
     <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
@@ -170,7 +168,6 @@ function FileIcon({ className }) {
     </svg>
   )
 }
-
 function ChartIcon({ className }) {
   return (
     <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
@@ -178,7 +175,6 @@ function ChartIcon({ className }) {
     </svg>
   )
 }
-
 function NoteIcon({ className }) {
   return (
     <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
@@ -186,7 +182,6 @@ function NoteIcon({ className }) {
     </svg>
   )
 }
-
 function UserIcon({ className }) {
   return (
     <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
