@@ -52,13 +52,12 @@ export default function Dashboard() {
               <div className="flex items-baseline gap-1">
                 <Counter
                   value={stat.value}
-                  fontSize={28}
-                  padding={0}
-                  gap={3}
+                  fontSize={32}
+                  padding={4}
+                  gap={6}
                   textColor="#fff"
-                  fontWeight="bold"
-                  gradientFrom="#111827"
-                  gradientTo="transparent"
+                  fontWeight="800"
+                  gradientHeight={0}
                 />
                 <span className="text-sm text-gray-400">{stat.suffix}</span>
               </div>
