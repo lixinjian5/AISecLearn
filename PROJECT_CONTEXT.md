@@ -139,11 +139,20 @@ D:\project1\aianquan\
 | 2026-07-25 | 23 个 Issues 创建（frontend×6 / backend×6 / security×6 / ai×5）|
 | 2026-07-25 | README.md 完整（项目介绍、技术栈、团队分工）|
 
-### 🔜 下一步
+### 🔜 下一步（MVP 策略）
 
-- **阶段 3**：Dashboard 首页 — React Bits 集成（CountUp、SpotlightCard 等）
-- 安装 React Bits 组件
-- 首页统计卡片、欢迎区、AI 助手卡片
+**开发方式**：vibe coding（AI 写大部分代码，我们审+改）
+
+**MVP 核心模块**（按优先级）：
+1. **AI 导师页面** — 三栏布局 + DeepSeek API 对话 + 朋友型 Prompt
+2. **Dashboard** — 统计卡片、欢迎区
+3. **题库 + 练习 + 错题** — 选择题、AI 批改
+4. **课程列表** — 课程卡片
+5. **部署** — 华为云服务器上线
+
+**MVP 砍掉**：注册/登录、靶场、日志分析、后台管理（以后再加）
+
+**原则**：没做好的页面保留入口，显示"正在开发中"
 
 ---
 
