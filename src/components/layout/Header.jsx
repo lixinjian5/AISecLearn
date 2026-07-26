@@ -22,7 +22,9 @@ export default function Header() {
   const title = pageTitles[location.pathname] || 'AISecLearn'
 
   return (
-    <header className="h-16 shrink-0 flex items-center justify-between px-6 border-b border-gray-800/30 bg-gray-900/50 backdrop-blur-md relative">
+    <header className="h-16 shrink-0 flex items-center justify-between px-6 bg-gray-900/50 backdrop-blur-md relative">
+      {/* 底部渐变光条 */}
+      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary-500/50 to-transparent animate-pulse" />
       {/* React Bits ShinyText — 页面标题光泽流动 */}
       <div>
         <ShinyText

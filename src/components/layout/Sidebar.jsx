@@ -1,5 +1,6 @@
 import { NavLink, useLocation } from 'react-router-dom'
 import Threads from '../react-bits/Threads'
+import Magnet from '../react-bits/Magnet'
 
 // 导航项配置
 const mainNavItems = [
@@ -26,19 +27,21 @@ const bottomNavItems = [
 
 function NavItem({ to, label, icon: Icon }) {
   return (
-    <NavLink
-      to={to}
-      className={({ isActive }) =>
-        `flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200
-        ${isActive
-          ? 'bg-primary-600/20 text-primary-400 border-l-2 border-primary-500'
-          : 'text-gray-400 hover:text-gray-200 hover:bg-white/5 border-l-2 border-transparent'
-        }`
-      }
-    >
-      <Icon className="w-5 h-5 shrink-0" />
-      <span>{label}</span>
-    </NavLink>
+    <Magnet padding={80} magnetStrength={15} innerClassName="w-full">
+      <NavLink
+        to={to}
+        className={({ isActive }) =>
+          `flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200
+          ${isActive
+            ? 'bg-primary-600/20 text-primary-400 border-l-2 border-primary-500'
+            : 'text-gray-400 hover:text-gray-200 hover:bg-white/5 border-l-2 border-transparent'
+          }`
+        }
+      >
+        <Icon className="w-5 h-5 shrink-0" />
+        <span>{label}</span>
+      </NavLink>
+    </Magnet>
   )
 }
 
