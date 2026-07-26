@@ -1,5 +1,6 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 import MainLayout from '../layouts/MainLayout'
+import AITutor from '../pages/AITutor/AITutor'
 
 // 暂时先做空壳页面，后续逐个实现
 function PlaceholderPage({ title }) {
@@ -23,7 +24,7 @@ export default function AppRouter() {
       {/* 主应用 — 带 Sidebar + Header 的布局 */}
       <Route element={<MainLayout />}>
         <Route path="/dashboard" element={<PlaceholderPage title="Dashboard" />} />
-        <Route path="/ai-tutor" element={<PlaceholderPage title="AI 导师" />} />
+        <Route path="/ai-tutor" element={<AITutor />} />
         <Route path="/courses" element={<PlaceholderPage title="学习中心" />} />
         <Route path="/course/:id" element={<PlaceholderPage title="课程详情" />} />
         <Route path="/practice" element={<PlaceholderPage title="练习中心" />} />
