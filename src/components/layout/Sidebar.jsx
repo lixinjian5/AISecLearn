@@ -1,7 +1,7 @@
 import { NavLink, useLocation } from 'react-router-dom'
 import Particles from '../react-bits/Particles'
 import Magnet from '../react-bits/Magnet'
-
+import ClickBurst from '../react-bits/ClickBurst'
 // 导航项配置
 const mainNavItems = [
   { to: '/dashboard',       label: '首页',       icon: HomeIcon },
@@ -27,21 +27,23 @@ const bottomNavItems = [
 
 function NavItem({ to, label, icon: Icon }) {
   return (
-    <Magnet padding={80} magnetStrength={15} innerClassName="w-full">
-      <NavLink
-        to={to}
-        className={({ isActive }) =>
-          `flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200
-          ${isActive
-            ? 'bg-primary-600/20 text-primary-400 border-l-2 border-primary-500'
-            : 'text-gray-400 hover:text-gray-200 hover:bg-white/5 border-l-2 border-transparent'
-          }`
-        }
-      >
-        <Icon className="w-5 h-5 shrink-0" />
-        <span>{label}</span>
-      </NavLink>
-    </Magnet>
+    <ClickBurst className="w-full">
+      <Magnet padding={80} magnetStrength={15} wrapperClassName="w-full">
+        <NavLink
+          to={to}
+          className={({ isActive }) =>
+            `flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200
+            ${isActive
+              ? 'bg-primary-600/20 text-primary-400 border-l-2 border-primary-500'
+              : 'text-gray-400 hover:text-gray-200 hover:bg-white/5 border-l-2 border-transparent'
+            }`
+          }
+        >
+          <Icon className="w-5 h-5 shrink-0" />
+          <span>{label}</span>
+        </NavLink>
+      </Magnet>
+    </ClickBurst>
   )
 }
 
@@ -59,7 +61,7 @@ export default function Sidebar() {
   return (
     <aside className="w-[260px] shrink-0 flex flex-col border-r border-gray-800/30 bg-gray-900/60 backdrop-blur-xl relative overflow-hidden">
       {/* React Bits Particles — 粒子背景 */}
-      <div className="absolute inset-0 opacity-[0.15] pointer-events-none">
+      <div className="absolute inset-0 opacity-[0.25] pointer-events-none">
         <Particles
           particleColors={['#6366f1', '#06b6d4', '#8b5cf6']}
           particleCount={120}
