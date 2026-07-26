@@ -89,7 +89,7 @@ export default function AITutor() {
       </aside>
 
       {/* ===== 中栏：聊天区 ===== */}
-      <main className="flex-1 flex flex-col min-w-0">
+      <main className="flex-1 flex flex-col min-w-0 bg-[#0d0d18]">
         <div className="flex-1 overflow-y-auto p-6 space-y-6">
           {/* 没有消息时显示欢迎语 */}
           {messages.length === 0 && (
