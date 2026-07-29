@@ -7,13 +7,77 @@ import ClickBurst from '../../components/react-bits/ClickBurst'
 import BorderGlow from '../../components/react-bits/BorderGlow'
 import FadeContent from '../../components/react-bits/FadeContent'
 import Lanyard from '../../components/react-bits/Lanyard'
+import { useMemo } from 'react'
 
 export default function Dashboard() {
+  // 生成用户信息卡面
+  const cardImage = useMemo(() => {
+    const canvas = document.createElement('canvas')
+    canvas.width = 512
+    canvas.height = 512
+    const ctx = canvas.getContext('2d')
+    // 深色背景
+    ctx.fillStyle = '#111827'
+    ctx.beginPath()
+    ctx.roundRect(0, 0, 512, 512, 32)
+    ctx.fill()
+    // 顶部渐变条纹（挂绳扣）
+    const grad = ctx.createLinearGradient(0, 0, 0, 80)
+    grad.addColorStop(0, '#6366f1')
+    grad.addColorStop(1, '#06b6d4')
+    ctx.fillStyle = grad
+    ctx.fillRect(0, 0, 512, 6)
+    // 头像
+    ctx.fillStyle = '#6366f1'
+    ctx.beginPath()
+    ctx.arc(256, 160, 50, 0, Math.PI * 2)
+    ctx.fill()
+    ctx.fillStyle = '#fff'
+    ctx.font = 'bold 36px Inter, system-ui'
+    ctx.textAlign = 'center'
+    ctx.fillText('李', 256, 175)
+    // 姓名
+    ctx.fillStyle = '#fff'
+    ctx.font = 'bold 28px Inter, system-ui'
+    ctx.fillText('李欣键', 256, 250)
+    // 学校
+    ctx.fillStyle = '#9ca3af'
+    ctx.font = '16px Inter, system-ui'
+    ctx.fillText('西南民族大学', 256, 280)
+    // 等级
+    ctx.fillStyle = '#a5b4fc'
+    ctx.font = 'bold 20px Inter, system-ui'
+    ctx.fillText('Lv.12 · 安全学徒', 256, 320)
+    // 分隔线
+    ctx.strokeStyle = 'rgba(255,255,255,0.08)'
+    ctx.lineWidth = 1
+    ctx.beginPath()
+    ctx.moveTo(60, 350)
+    ctx.lineTo(452, 350)
+    ctx.stroke()
+    // 统计
+    ctx.fillStyle = '#6b7280'
+    ctx.font = '14px Inter, system-ui'
+    ctx.fillText('累计 32h  ·  8 门课程  ·  126 题', 256, 385)
+    // 底部标签
+    ctx.fillStyle = 'rgba(99, 102, 241, 0.2)'
+    ctx.beginPath()
+    ctx.roundRect(156, 420, 200, 36, 18)
+    ctx.fill()
+    ctx.fillStyle = '#a5b4fc'
+    ctx.font = '14px Inter, system-ui'
+    ctx.fillText('AISecLearn', 256, 444)
+
+    return canvas.toDataURL()
+  }, [])
   return (
     <div className="relative">
       {/* 右上角 3D 工牌挂件 */}
       <div className="absolute top-2 right-4 w-[200px] h-[260px] z-20 pointer-events-auto">
-        <Lanyard position={[0, 0, 18]} gravity={[0, -25, 0]} fov={22} />
+        <Lanyard
+            position={[0, 0, 18]} gravity={[0, -25, 0]} fov={22}
+            frontImage={cardImage}
+          />
       </div>
 
       <div className="space-y-8 p-6">
