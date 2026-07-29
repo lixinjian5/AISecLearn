@@ -1,24 +1,29 @@
 import { useState } from 'react'
-import SpotlightCard from '../../components/react-bits/SpotlightCard'
 import GradientText from '../../components/react-bits/GradientText'
 import FadeContent from '../../components/react-bits/FadeContent'
 import Magnet from '../../components/react-bits/Magnet'
-import Masonry from '../../components/react-bits/Masonry'
+import MagicBento from '../../components/react-bits/MagicBento'
 
-const courses = [
-  { id: 1, title: 'Web 安全基础', category: 'web', difficulty: '入门', progress: 45, desc: '了解OWASP Top 10，掌握Web安全核心概念与常见漏洞类型', icon: '🌐' },
-  { id: 2, title: 'SQL 注入深度实战', category: 'web', difficulty: '进阶', progress: 68, desc: '从原理到实战，掌握数字型、字符型、盲注、报错注入等技巧，含Pikachu靶场练习', icon: '💉' },
-  { id: 3, title: 'XSS 跨站脚本攻击', category: 'web', difficulty: '进阶', progress: 42, desc: '反射型、存储型、DOM型XSS全解析', icon: '⚠️' },
-  { id: 4, title: 'CSRF 攻击与防御', category: 'web', difficulty: '入门', progress: 15, desc: '理解跨站请求伪造原理与Token防御机制', icon: '🛡️' },
-  { id: 5, title: '文件上传漏洞', category: 'web', difficulty: '高级', progress: 8, desc: '前端绕过、后缀绕过、内容类型绕过、条件竞争，从入门到精通', icon: '📤' },
-  { id: 6, title: '命令执行与代码注入', category: 'system', difficulty: '高级', progress: 0, desc: 'OS命令注入、代码注入、反序列化漏洞的检测与利用', icon: '💻' },
-  { id: 7, title: 'Python 安全编程', category: 'dev', difficulty: '进阶', progress: 30, desc: 'Python中常见安全陷阱与防御性编程最佳实践', icon: '🐍' },
-  { id: 8, title: 'Linux 安全基础', category: 'system', difficulty: '入门', progress: 55, desc: 'Linux权限管理、防火墙配置、日志审计与安全加固', icon: '🐧' },
-  { id: 9, title: '网络攻防实战', category: 'system', difficulty: '高级', progress: 12, desc: '端口扫描、流量分析、中间人攻击原理与防御策略', icon: '🔍' },
-  { id: 10, title: '密码学基础', category: 'dev', difficulty: '进阶', progress: 0, desc: '对称/非对称加密、哈希算法、数字签名、证书体系', icon: '🔐' },
-  { id: 11, title: '认证与授权安全', category: 'web', difficulty: '进阶', progress: 20, desc: 'JWT攻击、OAuth漏洞利用、Session固定与劫持防御', icon: '🔑' },
-  { id: 12, title: '日志分析与应急响应', category: 'system', difficulty: '高级', progress: 0, desc: '攻击溯源、日志分析技巧、应急响应完整流程与工具使用', icon: '📋' },
+const allCourses = [
+  { id: 1, title: 'Web 安全基础', category: 'web', difficulty: '入门', progress: 45, desc: 'OWASP Top 10，Web安全核心概念与常见漏洞类型', icon: '🌐' },
+  { id: 2, title: 'SQL 注入深度实战', category: 'web', difficulty: '进阶', progress: 68, desc: '数字型、字符型、盲注、报错注入——从原理到Pikachu靶场实战', icon: '💉' },
+  { id: 3, title: 'XSS 跨站脚本攻击', category: 'web', difficulty: '进阶', progress: 42, desc: '反射型、存储型、DOM型 XSS 全解析，含绕过技巧', icon: '⚠️' },
+  { id: 4, title: 'CSRF 攻击与防御', category: 'web', difficulty: '入门', progress: 15, desc: '跨站请求伪造原理与 Token 防御机制深度剖析', icon: '🛡️' },
+  { id: 5, title: '文件上传漏洞', category: 'web', difficulty: '高级', progress: 8, desc: '前端绕过、后缀绕过、MIME绕过、条件竞争完整攻击链', icon: '📤' },
+  { id: 6, title: '命令执行与代码注入', category: 'system', difficulty: '高级', progress: 0, desc: 'OS命令注入、反序列化漏洞的检测、利用与防御', icon: '💻' },
+  { id: 7, title: 'Python 安全编程', category: 'dev', difficulty: '进阶', progress: 30, desc: 'Python 常见安全陷阱、防御性编程与代码审计技巧', icon: '🐍' },
+  { id: 8, title: 'Linux 安全基础', category: 'system', difficulty: '入门', progress: 55, desc: '权限管理、iptables、日志审计与服务器安全加固', icon: '🐧' },
+  { id: 9, title: '网络攻防实战', category: 'system', difficulty: '高级', progress: 12, desc: 'Nmap端口扫描、Wireshark流量分析、中间人攻击防御', icon: '🔍' },
+  { id: 10, title: '密码学基础', category: 'dev', difficulty: '进阶', progress: 0, desc: 'AES/RSA/ECDH、哈希加盐、数字证书与 PKI 体系', icon: '🔐' },
+  { id: 11, title: '认证与授权安全', category: 'web', difficulty: '进阶', progress: 20, desc: 'JWT 攻击面、OAuth 2.0 漏洞、Session 安全全解', icon: '🔑' },
+  { id: 12, title: '日志分析与应急响应', category: 'system', difficulty: '高级', progress: 0, desc: '攻击溯源、ELK日志分析、应急响应完整流程与工具链', icon: '📋' },
 ]
+
+const diffColors = {
+  '入门': 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
+  '进阶': 'bg-amber-500/20 text-amber-400 border-amber-500/30',
+  '高级': 'bg-red-500/20 text-red-400 border-red-500/30',
+}
 
 const categories = [
   { key: 'all', label: '全部' },
@@ -27,15 +32,9 @@ const categories = [
   { key: 'dev', label: '安全开发' },
 ]
 
-const diffColors = {
-  '入门': 'bg-emerald-500/20 text-emerald-400',
-  '进阶': 'bg-amber-500/20 text-amber-400',
-  '高级': 'bg-red-500/20 text-red-400',
-}
-
 export default function Courses() {
   const [activeCategory, setActiveCategory] = useState('all')
-  const filtered = activeCategory === 'all' ? courses : courses.filter(c => c.category === activeCategory)
+  const filtered = activeCategory === 'all' ? allCourses : allCourses.filter(c => c.category === activeCategory)
 
   return (
     <div className="p-6 space-y-6">
@@ -46,7 +45,6 @@ export default function Courses() {
         <p className="text-sm text-gray-500 mt-1">选择课程，开启你的网络安全学习之旅</p>
       </FadeContent>
 
-      {/* 分类筛选 — Magnet 磁吸按钮 */}
       <FadeContent blur={true} duration={400} delay={100}>
         <div className="flex gap-2 flex-wrap">
           {categories.map(cat => (
@@ -66,49 +64,46 @@ export default function Courses() {
         </div>
       </FadeContent>
 
-      {/* React Bits Masonry 瀑布流 */}
-      <Masonry
-        gap={16}
-        stagger={0.04}
-        blurToFocus={true}
-      >
-        {filtered.map(course => (
-          <SpotlightCard
-            key={course.id}
-            className="!rounded-2xl !p-5 !bg-gray-900/60 !border-gray-800/30"
-            spotlightColor="rgba(99, 102, 241, 0.12)"
-          >
-            <div className="flex items-start gap-3 mb-3">
+      {/* React Bits MagicBento — 聚光灯 + 粒子 + 边框光 + 倾斜 + 磁吸 */}
+      <MagicBento
+        items={filtered.map(c => ({ ...c, label: c.difficulty, bg: '#111827' }))}
+        enableStars={true}
+        enableSpotlight={true}
+        enableBorderGlow={true}
+        enableTilt={true}
+        enableMagnetism={true}
+        clickEffect={true}
+        spotlightRadius={400}
+        particleCount={10}
+        glowColor="99, 102, 241"
+        renderCard={(course) => (
+          <div className="flex flex-col h-full">
+            <div className="flex items-center gap-3 mb-3">
               <span className="text-2xl">{course.icon}</span>
-              <div className="flex-1 min-w-0">
-                <h3 className="text-sm font-semibold text-white truncate">{course.title}</h3>
-                <span className={`inline-block text-[10px] px-2 py-0.5 rounded-full mt-1 ${diffColors[course.difficulty]}`}>
-                  {course.difficulty}
-                </span>
-              </div>
+              <span className={`text-[10px] px-2 py-0.5 rounded-full border ${diffColors[course.difficulty]}`}>
+                {course.difficulty}
+              </span>
             </div>
 
-            <p className="text-xs text-gray-500 leading-relaxed mb-4">{course.desc}</p>
+            <h3 className="text-sm font-semibold text-white mb-2">{course.title}</h3>
+            <p className="text-xs text-gray-500 leading-relaxed mb-4 flex-1">{course.desc}</p>
 
-            <div className="space-y-1.5">
+            <div className="space-y-1.5 mt-auto">
               <div className="flex justify-between text-xs">
-                <span className="text-gray-600">学习进度</span>
+                <span className="text-gray-600">进度</span>
                 <span className="text-gray-400">{course.progress}%</span>
               </div>
               <div className="h-1.5 rounded-full bg-gray-800 overflow-hidden">
-                <div
-                  className="h-full rounded-full bg-gradient-to-r from-primary-500 to-cyber-500 transition-all"
-                  style={{ width: `${course.progress}%` }}
-                />
+                <div className="h-full rounded-full bg-gradient-to-r from-primary-500 to-cyber-500" style={{ width: `${course.progress}%` }} />
               </div>
             </div>
 
             <button className="w-full mt-4 py-2 rounded-xl bg-white/[0.03] border border-gray-800/40 text-xs text-gray-400 hover:text-white hover:border-primary-500/40 hover:bg-primary-600/10 transition-all">
               {course.progress > 0 ? '继续学习 →' : '开始学习 →'}
             </button>
-          </SpotlightCard>
-        ))}
-      </Masonry>
+          </div>
+        )}
+      />
     </div>
   )
 }
