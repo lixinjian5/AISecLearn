@@ -14,7 +14,7 @@ export default function Dashboard() {
       {/* 右上角 3D 工牌挂件 */}
       <div className="absolute inset-0 z-20" style={{ pointerEvents: 'none' }}>
         <div style={{ pointerEvents: 'auto', width: '100%', height: '100%' }}>
-          <Lanyard position={[3, 1.5, 14]} gravity={[0, -25, 0]} fov={22} />
+          <Lanyard position={[5, 3, 20]} gravity={[0, -25, 0]} fov={18} />
         </div>
       </div>
 
