@@ -68,13 +68,9 @@ export default function Courses() {
 
       {/* React Bits Masonry 瀑布流 */}
       <Masonry
-        columns={3}
         gap={16}
         stagger={0.04}
-        animateFrom="bottom"
         blurToFocus={true}
-        scaleOnHover={true}
-        hoverScale={0.97}
       >
         {filtered.map(course => (
           <SpotlightCard
