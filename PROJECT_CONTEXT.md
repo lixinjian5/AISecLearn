@@ -175,3 +175,36 @@ D:\project1\aianquan\
 **当前状态**：AI 导师可对话、Dashboard 可用、其余占位
 
 **下一步**：课程列表 + 题库练习
+
+### 🔜 下一步
+
+1. **课程列表页面** — 课程卡片
+2. **题库 + 练习页面** — 选择题、AI 批改
+3. **代码安全分析页面** — 上传代码 → AI 分析
+4. **部署** — 服务器上线
+
+---
+
+### 2026-07-29（今日新增）
+
+**完成内容**：
+- 课程中心：React Bits Masonry 瀑布流 → MagicBento 六合一效果卡片（聚光灯+粒子+边框光+3D倾斜+磁吸+点击波纹）
+- 个人中心：左侧 3D Lanyard 工牌 + 右侧信息面板（Counter 统计 + 成就徽章）
+- Dashboard 右上角：Lanyard 3D 挂绳卡片，Canvas 动态生成暖金竖排姓名卡面
+- React Bits 新增：Masonry、MagicBento、Lanyard、Particles（共 16 个组件）
+- 依赖新增：@react-three/fiber@8、@react-three/drei@9、@react-three/rapier@1、three、meshline、ogl
+- Issue 管理：#1 #2 #3 #6 #16 #18 已关闭
+- 刘梓欣内容同步：15 漏洞知识库 + 17 检测规则已推送到 dev/security
+
+**关键决策**：
+- 课程卡片用 MagicBento 替代简单 Grid（面试官看到会问"这是什么"）
+- Lanyard 有拖拽边界限制（Three.js Canvas + 小容器的固有矛盾，先接受）
+- 每次做新页面先查 React Bits 再开工
+
+**当前状态**：AI 导师 ✅ / Dashboard ✅ / 课程中心 ✅ / 个人中心 ✅ / 其余占位
+
+### 🔜 下一步
+
+1. 题库 + 练习页面
+2. 代码安全分析页面
+3. 部署
