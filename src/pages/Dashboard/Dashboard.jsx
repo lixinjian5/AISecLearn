@@ -11,11 +11,9 @@ import Lanyard from '../../components/react-bits/Lanyard'
 export default function Dashboard() {
   return (
     <div className="relative">
-      {/* 右上角 3D 工牌挂件 */}
-      <div className="absolute inset-0 z-20" style={{ pointerEvents: 'none' }}>
-        <div style={{ pointerEvents: 'auto', width: '100%', height: '100%' }}>
-          <Lanyard position={[5, 3, 20]} gravity={[0, -25, 0]} fov={18} />
-        </div>
+      {/* 右上角 3D 工牌挂件 — 容器虽小但 Overflow 可见，拖拽无限制 */}
+      <div className="absolute top-0 right-0 w-[220px] h-[280px] z-20 overflow-visible">
+        <Lanyard key="lanyard-card" position={[0, 0, 18]} gravity={[0, -25, 0]} fov={22} />
       </div>
 
       <div className="space-y-8 p-6">

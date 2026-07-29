@@ -2,8 +2,16 @@
   position: relative;
   z-index: 0;
   width: 100%;
-  height: 100%;
+  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: visible;
+}
+.lanyard-wrapper canvas {
+  position: absolute !important;
+  top: 0;
+  left: 0;
+  width: 100vw !important;
+  height: 100vh !important;
 }
