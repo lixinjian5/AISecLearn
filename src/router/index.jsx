@@ -3,6 +3,7 @@ import MainLayout from '../layouts/MainLayout'
 import AITutor from '../pages/AITutor/AITutor'
 import Dashboard from '../pages/Dashboard/Dashboard'
 import Courses from '../pages/Courses/Courses'
+import Profile from '../pages/Profile/Profile'
 
 // 暂时先做空壳页面，后续逐个实现
 function PlaceholderPage({ title }) {
@@ -36,7 +37,7 @@ export default function AppRouter() {
         <Route path="/code-analysis" element={<PlaceholderPage title="AI 代码分析" />} />
         <Route path="/log-analysis" element={<PlaceholderPage title="AI 日志分析" />} />
         <Route path="/learning-progress" element={<PlaceholderPage title="学习记录" />} />
-        <Route path="/profile" element={<PlaceholderPage title="个人中心" />} />
+        <Route path="/profile" element={<Profile />} />
         <Route path="/admin" element={<PlaceholderPage title="后台管理" />} />
       </Route>
 
