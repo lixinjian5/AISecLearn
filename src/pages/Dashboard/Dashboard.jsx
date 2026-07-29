@@ -12,8 +12,10 @@ export default function Dashboard() {
   return (
     <div className="relative">
       {/* 右上角 3D 工牌挂件 */}
-      <div className="absolute top-0 right-0 w-[60%] h-[50%] z-20 pointer-events-auto">
-        <Lanyard position={[0, 0, 18]} gravity={[0, -25, 0]} fov={22} />
+      <div className="absolute inset-0 z-20" style={{ pointerEvents: 'none' }}>
+        <div style={{ pointerEvents: 'auto', width: '100%', height: '100%' }}>
+          <Lanyard position={[3, 1.5, 14]} gravity={[0, -25, 0]} fov={22} />
+        </div>
       </div>
 
       <div className="space-y-8 p-6">
