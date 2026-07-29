@@ -14,59 +14,35 @@ export default function Dashboard() {
   const cardImage = useMemo(() => {
     const canvas = document.createElement('canvas')
     canvas.width = 512
-    canvas.height = 512
+    canvas.height = 640
     const ctx = canvas.getContext('2d')
-    // 深色背景
-    ctx.fillStyle = '#111827'
-    ctx.beginPath()
-    ctx.roundRect(0, 0, 512, 512, 32)
-    ctx.fill()
-    // 顶部渐变条纹（挂绳扣）
-    const grad = ctx.createLinearGradient(0, 0, 0, 80)
-    grad.addColorStop(0, '#6366f1')
-    grad.addColorStop(1, '#06b6d4')
-    ctx.fillStyle = grad
+    // 暖金背景
+    const bgGrad = ctx.createLinearGradient(0, 0, 512, 640)
+    bgGrad.addColorStop(0, '#c8a44e')
+    bgGrad.addColorStop(0.5, '#b8943d')
+    bgGrad.addColorStop(1, '#a07828')
+    ctx.fillStyle = bgGrad
+    ctx.fillRect(0, 0, 512, 640)
+    // 挂绳扣
+    ctx.fillStyle = '#1a1a1a'
     ctx.fillRect(0, 0, 512, 6)
-    // 头像
-    ctx.fillStyle = '#6366f1'
-    ctx.beginPath()
-    ctx.arc(256, 160, 50, 0, Math.PI * 2)
-    ctx.fill()
-    ctx.fillStyle = '#fff'
-    ctx.font = 'bold 36px Inter, system-ui'
+    // 装饰圆环
+    ctx.strokeStyle = 'rgba(26,26,26,0.06)'
+    ctx.lineWidth = 2
+    ctx.beginPath(); ctx.arc(80, 80, 40, 0, Math.PI*2); ctx.stroke()
+    ctx.beginPath(); ctx.arc(80, 80, 25, 0, Math.PI*2); ctx.stroke()
+    ctx.beginPath(); ctx.arc(432, 560, 45, 0, Math.PI*2); ctx.stroke()
+    // 竖排名字
+    ctx.fillStyle = '#1a1a1a'
+    ctx.font = 'bold 72px "Noto Serif SC", serif'
     ctx.textAlign = 'center'
-    ctx.fillText('李', 256, 175)
-    // 姓名
-    ctx.fillStyle = '#fff'
-    ctx.font = 'bold 28px Inter, system-ui'
-    ctx.fillText('李欣键', 256, 250)
-    // 学校
-    ctx.fillStyle = '#9ca3af'
-    ctx.font = '16px Inter, system-ui'
-    ctx.fillText('西南民族大学', 256, 280)
-    // 等级
-    ctx.fillStyle = '#a5b4fc'
-    ctx.font = 'bold 20px Inter, system-ui'
-    ctx.fillText('Lv.12 · 安全学徒', 256, 320)
-    // 分隔线
-    ctx.strokeStyle = 'rgba(255,255,255,0.08)'
-    ctx.lineWidth = 1
-    ctx.beginPath()
-    ctx.moveTo(60, 350)
-    ctx.lineTo(452, 350)
-    ctx.stroke()
-    // 统计
-    ctx.fillStyle = '#6b7280'
-    ctx.font = '14px Inter, system-ui'
-    ctx.fillText('累计 32h  ·  8 门课程  ·  126 题', 256, 385)
-    // 底部标签
-    ctx.fillStyle = 'rgba(99, 102, 241, 0.2)'
-    ctx.beginPath()
-    ctx.roundRect(156, 420, 200, 36, 18)
-    ctx.fill()
-    ctx.fillStyle = '#a5b4fc'
-    ctx.font = '14px Inter, system-ui'
-    ctx.fillText('AISecLearn', 256, 444)
+    ctx.fillText('李', 256, 240)
+    ctx.fillText('欣', 256, 330)
+    ctx.fillText('键', 256, 420)
+    // 底部
+    ctx.fillStyle = 'rgba(26,26,26,0.35)'
+    ctx.font = '13px Inter, system-ui'
+    ctx.fillText('AISecLearn · 安全学徒', 256, 590)
 
     return canvas.toDataURL()
   }, [])
