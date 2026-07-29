@@ -3,12 +3,7 @@
   z-index: 0;
   width: 100%;
   height: 100%;
-  overflow: visible;
-}
-.lanyard-wrapper canvas {
-  position: absolute !important;
-  top: -100% !important;
-  left: -100% !important;
-  width: 300% !important;
-  height: 300% !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

@@ -12,7 +12,7 @@ export default function Dashboard() {
   return (
     <div className="relative">
       {/* 右上角 3D 工牌挂件 */}
-      <div className="absolute top-0 right-0 w-[350px] h-[400px] z-20 pointer-events-none">
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] z-20 pointer-events-none">
         <div className="pointer-events-auto">
           <Lanyard position={[0, 0, 18]} gravity={[0, -25, 0]} fov={22} />
         </div>
