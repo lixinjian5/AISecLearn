@@ -4,6 +4,7 @@ import AITutor from '../pages/AITutor/AITutor'
 import Dashboard from '../pages/Dashboard/Dashboard'
 import Courses from '../pages/Courses/Courses'
 import Profile from '../pages/Profile/Profile'
+import Practice from '../pages/Practice/Practice'
 
 // 暂时先做空壳页面，后续逐个实现
 function PlaceholderPage({ title }) {
@@ -30,7 +31,7 @@ export default function AppRouter() {
         <Route path="/ai-tutor" element={<AITutor />} />
         <Route path="/courses" element={<Courses />} />
         <Route path="/course/:id" element={<PlaceholderPage title="课程详情" />} />
-        <Route path="/practice" element={<PlaceholderPage title="练习中心" />} />
+        <Route path="/practice" element={<Practice />} />
         <Route path="/questions" element={<PlaceholderPage title="题库" />} />
         <Route path="/wrong-questions" element={<PlaceholderPage title="错题本" />} />
         <Route path="/security-lab" element={<PlaceholderPage title="安全靶场" />} />
