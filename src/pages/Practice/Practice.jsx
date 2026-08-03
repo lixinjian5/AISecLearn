@@ -5,6 +5,7 @@ import SpotlightCard from '../../components/react-bits/SpotlightCard'
 import Magnet from '../../components/react-bits/Magnet'
 import ClickBurst from '../../components/react-bits/ClickBurst'
 import { callAI } from '../../services/aiService'
+import { addWrongQuestion } from '../../utils/wrongQuestions'
 
 // 从知识库提取的题目
 const questions = [
@@ -178,6 +179,7 @@ export default function Practice() {
   const handleSubmit = async (q) => {
     if (selected[q.id] === undefined) return
     const isCorrect = selected[q.id] === q.answer
+    if (!isCorrect) addWrongQuestion(q, selected[q.id])
     setSubmitted(prev => ({ ...prev, [q.id]: true }))
     setGrading(prev => ({ ...prev, [q.id]: true }))
 

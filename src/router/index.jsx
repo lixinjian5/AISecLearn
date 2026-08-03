@@ -7,6 +7,7 @@ import Profile from '../pages/Profile/Profile'
 import Practice from '../pages/Practice/Practice'
 import CodeAnalysis from '../pages/CodeAnalysis/CodeAnalysis'
 import LearningProgress from '../pages/LearningProgress/LearningProgress'
+import WrongQuestions from '../pages/WrongQuestions/WrongQuestions'
 
 // 暂时先做空壳页面，后续逐个实现
 function PlaceholderPage({ title }) {
@@ -35,7 +36,7 @@ export default function AppRouter() {
         <Route path="/course/:id" element={<PlaceholderPage title="课程详情" />} />
         <Route path="/practice" element={<Practice />} />
         <Route path="/questions" element={<PlaceholderPage title="题库" />} />
-        <Route path="/wrong-questions" element={<PlaceholderPage title="错题本" />} />
+        <Route path="/wrong-questions" element={<WrongQuestions />} />
         <Route path="/security-lab" element={<PlaceholderPage title="安全靶场" />} />
         <Route path="/code-analysis" element={<CodeAnalysis />} />
         <Route path="/log-analysis" element={<PlaceholderPage title="AI 日志分析" />} />
