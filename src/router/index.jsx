@@ -6,6 +6,7 @@ import Courses from '../pages/Courses/Courses'
 import Profile from '../pages/Profile/Profile'
 import Practice from '../pages/Practice/Practice'
 import CodeAnalysis from '../pages/CodeAnalysis/CodeAnalysis'
+import LearningProgress from '../pages/LearningProgress/LearningProgress'
 
 // 暂时先做空壳页面，后续逐个实现
 function PlaceholderPage({ title }) {
@@ -38,7 +39,7 @@ export default function AppRouter() {
         <Route path="/security-lab" element={<PlaceholderPage title="安全靶场" />} />
         <Route path="/code-analysis" element={<CodeAnalysis />} />
         <Route path="/log-analysis" element={<PlaceholderPage title="AI 日志分析" />} />
-        <Route path="/learning-progress" element={<PlaceholderPage title="学习记录" />} />
+        <Route path="/learning-progress" element={<LearningProgress />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/admin" element={<PlaceholderPage title="后台管理" />} />
       </Route>
