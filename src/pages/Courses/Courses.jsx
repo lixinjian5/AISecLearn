@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import GradientText from '../../components/react-bits/GradientText'
 import FadeContent from '../../components/react-bits/FadeContent'
 import Magnet from '../../components/react-bits/Magnet'
@@ -98,9 +99,9 @@ export default function Courses() {
               </div>
             </div>
 
-            <button className="w-full mt-4 py-2 rounded-xl bg-white/[0.03] border border-gray-800/40 text-xs text-gray-400 hover:text-white hover:border-primary-500/40 hover:bg-primary-600/10 transition-all">
+            <Link to={`/course/${course.id}`} className="block w-full mt-4 py-2 rounded-xl bg-white/[0.03] border border-gray-800/40 text-xs text-center text-gray-400 hover:text-white hover:border-primary-500/40 hover:bg-primary-600/10 transition-all">
               {course.progress > 0 ? '继续学习 →' : '开始学习 →'}
-            </button>
+            </Link>
           </div>
         )}
       />
