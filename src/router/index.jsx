@@ -10,6 +10,8 @@ import LearningProgress from '../pages/LearningProgress/LearningProgress'
 import WrongQuestions from '../pages/WrongQuestions/WrongQuestions'
 import CourseDetail from '../pages/CourseDetail/CourseDetail'
 import SecurityLab from '../pages/SecurityLab/SecurityLab'
+import Login from '../pages/Login/Login'
+import Questions from '../pages/Questions/Questions'
 
 // 暂时先做空壳页面，后续逐个实现
 function PlaceholderPage({ title }) {
@@ -27,8 +29,8 @@ export default function AppRouter() {
   return (
     <Routes>
       {/* 登录/注册 — 独立布局，无 Sidebar */}
-      <Route path="/login" element={<PlaceholderPage title="登录" />} />
-      <Route path="/register" element={<PlaceholderPage title="注册" />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Login />} />
 
       {/* 主应用 — 带 Sidebar + Header 的布局 */}
       <Route element={<MainLayout />}>
@@ -37,7 +39,7 @@ export default function AppRouter() {
         <Route path="/courses" element={<Courses />} />
         <Route path="/course/:id" element={<CourseDetail />} />
         <Route path="/practice" element={<Practice />} />
-        <Route path="/questions" element={<PlaceholderPage title="题库" />} />
+        <Route path="/questions" element={<Questions />} />
         <Route path="/wrong-questions" element={<WrongQuestions />} />
         <Route path="/security-lab" element={<SecurityLab />} />
         <Route path="/code-analysis" element={<CodeAnalysis />} />
