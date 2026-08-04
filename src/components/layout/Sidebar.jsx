@@ -10,6 +10,7 @@ const mainNavItems = [
   { to: '/courses',         label: '学习中心',   icon: BookIcon },
   { to: '/practice',        label: '练习中心',   icon: TargetIcon },
   { to: '/security-lab',    label: '安全靶场',   icon: ShieldIcon },
+  { to: '/questions',       label: '题库',       icon: NoteIcon },
 ]
 
 const analysisNavItems = [
