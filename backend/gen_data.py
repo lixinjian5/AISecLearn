@@ -1,0 +1,23 @@
+import json
+
+questions = [
+  {"id":1,"category":"SQL注入","difficulty":"入门","question":"SQL 注入产生的根本原因是什么？","options":["A. 数据库版本太低","B. 用户输入被直接拼接到 SQL 语句中","C. 服务器带宽不足","D. 使用了 MySQL 数据库"],"answer":1,"code":None},
+  {"id":2,"category":"SQL注入","difficulty":"进阶","question":"以下哪种方式可有效防御 SQL 注入？","options":["A. 对用户输入做 HTML 转义","B. 使用参数化查询（Prepared Statement）","C. 给数据库设置复杂密码","D. 关闭数据库错误回显"],"answer":1,"code":None},
+  {"id":3,"category":"SQL注入","difficulty":"进阶","question":"攻击者输入 admin' OR '1'='1 进行登录绕过，这利用了 SQL 注入的什么特性？","options":["A. 联合查询","B. 永真条件绕过","C. 时间盲注","D. 堆叠查询"],"answer":1,"code":None},
+  {"id":4,"category":"SQL注入","difficulty":"实战","question":"以下 Python 代码存在什么问题？","options":["A. 没有问题，代码是安全的","B. SQL 注入——username 被字符串拼接进 SQL","C. 数据库连接没有关闭","D. 缺少 try-except 异常处理"],"answer":1,"code":"username = request.GET['username']\nquery = \"SELECT * FROM users WHERE username = '\" + username + \"'\"\ncursor.execute(query)"},
+  {"id":5,"category":"XSS","difficulty":"入门","question":"XSS 攻击中，XSS 的全称是什么？","options":["A. Cross-Site Scripting","B. Cross-Server Security","C. XML Secure Script","D. eXtreme Security System"],"answer":0,"code":None},
+  {"id":6,"category":"XSS","difficulty":"进阶","question":"存储型 XSS 和反射型 XSS 的核心区别是什么？","options":["A. 存储型需要数据库，反射型不需要","B. 存储型恶意代码保存在服务器，反射型仅在 URL 中","C. 存储型只影响管理员，反射型影响所有用户","D. 两者没有区别"],"answer":1,"code":None},
+  {"id":7,"category":"XSS","difficulty":"进阶","question":"以下哪种方式不能有效防御 XSS？","options":["A. HTML 实体转义","B. 设置 HttpOnly Cookie","C. 使用 WAF","D. 仅在前端做输入校验"],"answer":3,"code":None},
+  {"id":8,"category":"XSS","difficulty":"实战","question":"这段 JavaScript 代码存在什么安全问题？","options":["A. 没有问题","B. DOM 型 XSS——用户输入直接插入 innerHTML","C. 内存泄露","D. 跨域问题"],"answer":1,"code":"var name = location.hash.substring(1);\ndocument.getElementById('welcome').innerHTML = '欢迎，' + name;"},
+  {"id":9,"category":"CSRF","difficulty":"入门","question":"CSRF 攻击的原理是什么？","options":["A. 直接入侵服务器","B. 利用用户已登录的身份，伪造用户发起恶意请求","C. 窃取用户密码","D. 篡改数据库数据"],"answer":1,"code":None},
+  {"id":10,"category":"CSRF","difficulty":"进阶","question":"以下哪种方式无法有效防御 CSRF？","options":["A. CSRF Token","B. 验证 Referer 头","C. 设置 SameSite Cookie","D. 使用 HTTPS"],"answer":3,"code":None},
+  {"id":11,"category":"文件上传","difficulty":"进阶","question":"文件上传漏洞中，白名单验证和黑名单验证的区别是什么？","options":["A. 白名单只允许指定类型，黑名单禁止指定类型","B. 白名单禁止指定类型，黑名单只允许指定类型","C. 两者完全一样","D. 白名单是前端验证，黑名单是后端验证"],"answer":0,"code":None},
+  {"id":12,"category":"命令执行","difficulty":"进阶","question":"以下哪段 Python 代码更安全？","options":["A. os.system('ping ' + user_input)","B. subprocess.run(['ping', user_input])","C. os.popen('ping ' + user_input)","D. 以上都不安全"],"answer":1,"code":None},
+  {"id":13,"category":"密码学","difficulty":"入门","question":"存储用户密码时，以下哪种做法最安全？","options":["A. 明文存储","B. MD5 哈希存储","C. 加盐 + bcrypt 哈希存储","D. Base64 编码存储"],"answer":2,"code":None},
+  {"id":14,"category":"认证安全","difficulty":"进阶","question":"JWT Token 应该存储在哪里最安全？","options":["A. localStorage","B. HttpOnly Cookie","C. URL 参数中","D. SessionStorage"],"answer":1,"code":None},
+  {"id":15,"category":"网络安全","difficulty":"进阶","question":"HTTPS 相比 HTTP 主要增加了什么保护？","options":["A. 数据压缩","B. 加密传输 + 身份验证 + 数据完整性","C. 访问速度更快","D. 防止 SQL 注入"],"answer":1,"code":None},
+]
+
+with open("D:/project1/aianquan/backend/data/questions.json", "w", encoding="utf-8") as f:
+    json.dump(questions, f, ensure_ascii=False, indent=2)
+print("questions.json done")
