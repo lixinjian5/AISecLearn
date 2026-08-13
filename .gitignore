@@ -50,3 +50,5 @@ env/
 
 # Misc
 *.local
+*.db
+*.sqlite3
