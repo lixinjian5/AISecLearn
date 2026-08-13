@@ -7,7 +7,8 @@ import ClickBurst from '../../components/react-bits/ClickBurst'
 import BorderGlow from '../../components/react-bits/BorderGlow'
 import FadeContent from '../../components/react-bits/FadeContent'
 import Lanyard from '../../components/react-bits/Lanyard'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
+import { callAI } from '../../services/aiService'
 
 export default function Dashboard() {
   // 生成用户信息卡面
@@ -46,6 +47,23 @@ export default function Dashboard() {
 
     return canvas.toDataURL()
   }, [])
+
+  // AI 学习推荐
+  const [recommendation, setRecommendation] = useState('')
+  const [recommending, setRecommending] = useState(false)
+
+  const handleRecommend = async () => {
+    setRecommending(true)
+    setRecommendation('')
+    try {
+      const reply = await callAI([{ role: 'user', content: '你是 AISecLearn 的 AI 学习助手。用户今天打开首页，请根据以下学习数据，用中文推荐一个今天最值得学习的内容。数据：SQL注入68%、XSS 42%、CSRF 15%、文件上传8%。语气友好简洁，3句话以内，直接给建议不要寒暄。' }], { temperature: 0.7, maxTokens: 200 })
+      setRecommendation(reply)
+    } catch (e) {
+      setRecommendation('💡 建议今天复习 XSS，你的进度还差 58%，从反射型开始巩固。')
+    }
+    setRecommending(false)
+  }
+
   return (
     <div className="relative">
       {/* 右上角 3D 工牌挂件 */}
@@ -131,11 +149,16 @@ export default function Dashboard() {
                 </div>
                 <ClickBurst>
                   <Magnet padding={60} magnetStrength={20}>
-                    <button className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-primary-600 to-cyber-600 text-white text-sm font-medium hover:from-primary-500 hover:to-cyber-500 transition-all shadow-lg shadow-primary-500/25">
-                      开始学习 →
+                    <button onClick={handleRecommend} disabled={recommending} className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-primary-600 to-cyber-600 text-white text-sm font-medium hover:from-primary-500 hover:to-cyber-500 transition-all shadow-lg shadow-primary-500/25 disabled:opacity-50">
+                      {recommending ? 'AI 思考中...' : '开始学习 →'}
                     </button>
                   </Magnet>
                 </ClickBurst>
+                {recommendation && (
+                  <div className="text-xs text-gray-400 leading-relaxed bg-gray-900/40 rounded-xl p-3 max-w-full">
+                    {recommendation}
+                  </div>
+                )}
               </div>
             </BorderGlow>
           </FadeContent>

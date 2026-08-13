@@ -25,6 +25,7 @@ const recordNavItems = [
 
 const bottomNavItems = [
   { to: '/profile',  label: '用户中心', icon: UserIcon },
+  { to: '/admin',    label: '后台管理', icon: ChartIcon },
 ]
 
 function NavItem({ to, label, icon: Icon }) {

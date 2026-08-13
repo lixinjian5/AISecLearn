@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { callAI } from '../../services/aiService'
+import { analyzeLog } from '../../utils/logRules'
 import GradientText from '../../components/react-bits/GradientText'
 import FadeContent from '../../components/react-bits/FadeContent'
 import SpotlightCard from '../../components/react-bits/SpotlightCard'
@@ -28,11 +29,14 @@ export default function LogAnalysis() {
   const [log, setLog] = useState('')
   const [analyzing, setAnalyzing] = useState(false)
   const [result, setResult] = useState(null)
+  const [ruleResult, setRuleResult] = useState(null)
 
   const handleAnalyze = async () => {
     if (!log.trim()) return
     setAnalyzing(true)
     setResult(null)
+    // 先跑本地规则引擎（毫秒级）
+    setRuleResult(analyzeLog(log))
     try {
       const reply = await callAI([{ role: 'user', content: `你是一位安全运维专家。分析以下服务器日志，识别可疑行为。
 
@@ -92,11 +96,53 @@ ${log}
         </FadeContent>
 
         <FadeContent blur={true} duration={500} delay={200}>
-          {result ? (
+          {result || ruleResult ? (
             <BorderGlow className="!rounded-2xl" backgroundColor="#111827" borderRadius={16} glowColor="99 102 241" glowIntensity={0.6} glowRadius={25} colors={['#6366f1','#8b5cf6','#06b6d4']}>
               <div className="p-6 h-[480px] overflow-y-auto">
                 <h3 className="text-sm font-semibold text-white mb-4">📋 分析结果</h3>
-                <div className="text-sm text-gray-300 leading-relaxed whitespace-pre-wrap">{result}</div>
+
+                {/* 规则引擎实时检测 */}
+                {ruleResult && (
+                  <div className="mb-4">
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="text-xs font-semibold text-cyber-400">⚡ 规则引擎实时检测</span>
+                      <span className="text-[10px] text-gray-500">（{ruleResult.summary}）</span>
+                    </div>
+                    {ruleResult.threats.length > 0 ? (
+                      <div className="space-y-2">
+                        {ruleResult.threats.map((t, i) => (
+                          <div key={i} className="flex items-center gap-2 p-2.5 rounded-lg bg-gray-900/50 border border-gray-800/30">
+                            <span className="text-sm">{t.severity}</span>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-xs text-gray-300">{t.type}</p>
+                              <p className="text-[10px] text-gray-600 font-mono truncate">{t.ip} · {t.evidence}</p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-xs text-emerald-400">✅ 未发现明显威胁</p>
+                    )}
+                  </div>
+                )}
+
+                {/* AI 深度分析 */}
+                {result && (
+                  <div>
+                    <div className="text-xs font-semibold text-primary-400 mb-2">🤖 AI 深度分析</div>
+                    <div className="text-sm text-gray-300 leading-relaxed whitespace-pre-wrap">{result}</div>
+                  </div>
+                )}
+
+                {!result && analyzing && (
+                  <div className="flex items-center gap-2 text-sm text-gray-400">
+                    <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                    </svg>
+                    AI 正在深度分析...
+                  </div>
+                )}
               </div>
             </BorderGlow>
           ) : (

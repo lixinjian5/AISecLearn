@@ -14,6 +14,7 @@ import Login from '../pages/Login/Login'
 import Questions from '../pages/Questions/Questions'
 import LogAnalysis from '../pages/LogAnalysis/LogAnalysis'
 import Admin from '../pages/Admin/Admin'
+import LabDetail from '../pages/LabDetail/LabDetail'
 
 // 暂时先做空壳页面，后续逐个实现
 function PlaceholderPage({ title }) {
@@ -44,6 +45,7 @@ export default function AppRouter() {
         <Route path="/questions" element={<Questions />} />
         <Route path="/wrong-questions" element={<WrongQuestions />} />
         <Route path="/security-lab" element={<SecurityLab />} />
+        <Route path="/security-lab/:id" element={<LabDetail />} />
         <Route path="/code-analysis" element={<CodeAnalysis />} />
         <Route path="/log-analysis" element={<LogAnalysis />} />
         <Route path="/learning-progress" element={<LearningProgress />} />
