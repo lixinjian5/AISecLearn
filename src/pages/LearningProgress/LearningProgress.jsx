@@ -1,7 +1,9 @@
+import { useState, useEffect } from 'react'
 import GradientText from '../../components/react-bits/GradientText'
 import FadeContent from '../../components/react-bits/FadeContent'
 import SpotlightCard from '../../components/react-bits/SpotlightCard'
 import Counter from '../../components/react-bits/Counter'
+import { api } from '../../services/api'
 
 const weeklyData = [
   { day: '一', hours: 1.5, questions: 12 },
@@ -31,6 +33,14 @@ const courseList = [
 ]
 
 export default function LearningProgress() {
+  const [progress, setProgress] = useState({ total_answered: 126, correct: 91, wrong: 35, accuracy: 72 })
+
+  useEffect(() => {
+    api.getProgress()
+      .then(data => setProgress(data))
+      .catch(() => {})
+  }, [])
+
   return (
     <div className="p-6 space-y-6">
       <FadeContent blur={true} duration={500}>
@@ -44,9 +54,9 @@ export default function LearningProgress() {
       <div className="grid grid-cols-4 gap-4">
         {[
           { label: '累计学习', value: 32, suffix: ' 小时', icon: '⏱️', color: 'rgba(99,102,241,0.15)' },
-          { label: '完成题目', value: 126, suffix: ' 道', icon: '✅', color: 'rgba(6,182,212,0.15)' },
-          { label: '正确率', value: 72, suffix: '%', icon: '🎯', color: 'rgba(34,211,238,0.15)' },
-          { label: '错题数量', value: 35, suffix: ' 道', icon: '📝', color: 'rgba(239,68,68,0.10)' },
+          { label: '完成题目', value: progress.total_answered, suffix: ' 道', icon: '✅', color: 'rgba(6,182,212,0.15)' },
+          { label: '正确率', value: progress.accuracy, suffix: '%', icon: '🎯', color: 'rgba(34,211,238,0.15)' },
+          { label: '错题数量', value: progress.wrong, suffix: ' 道', icon: '📝', color: 'rgba(239,68,68,0.10)' },
         ].map((s, i) => (
           <FadeContent key={i} blur={true} duration={400} delay={i * 80}>
             <SpotlightCard className="!rounded-2xl !p-5 !bg-gray-900/60 !border-gray-800/30" spotlightColor={s.color}>
