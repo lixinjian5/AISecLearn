@@ -1,15 +1,24 @@
 ﻿"""
 AISecLearn 后端 API
-FastAPI + JSON 文件数据库（MVP 阶段，后续切换 MySQL）
+FastAPI + SQLAlchemy ORM（SQLite 本地 / MySQL 生产）
 """
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+from sqlalchemy.orm import Session
 import json
 from pathlib import Path
 from typing import Optional
 from datetime import datetime
 
-app = FastAPI(title="AISecLearn API", version="0.1.0")
+from database import Base, engine, get_db
+from models import User
+from auth import hash_password, verify_password, create_access_token, get_current_user
+
+# 启动时自动建表（SQLite 本地开发；生产用 schema.sql）
+Base.metadata.create_all(bind=engine)
+
+app = FastAPI(title="AISecLearn API", version="0.2.0")
 
 app.add_middleware(
     CORSMiddleware,
@@ -138,6 +147,72 @@ def get_progress_history(user_id: int = 1, limit: int = 50):
         result.append({**r, "question_text": q.get("question", ""), "category": q.get("category", ""),
                        "correct_answer": q.get("answer", "")})
     return list(reversed(result))
+
+
+# ==================== 用户认证 API ====================
+
+class RegisterRequest(BaseModel):
+    username: str
+    email: str
+    password: str
+
+
+class LoginRequest(BaseModel):
+    username: str
+    password: str
+
+
+@app.post("/api/auth/register")
+def register(req: RegisterRequest, db: Session = Depends(get_db)):
+    """用户注册"""
+    # 检查用户名是否已存在
+    if db.query(User).filter(User.username == req.username).first():
+        raise HTTPException(status_code=400, detail="用户名已存在")
+    if db.query(User).filter(User.email == req.email).first():
+        raise HTTPException(status_code=400, detail="邮箱已注册")
+
+    user = User(
+        username=req.username,
+        email=req.email,
+        password_hash=hash_password(req.password),
+    )
+    db.add(user)
+    db.commit()
+    db.refresh(user)
+
+    token = create_access_token({"sub": user.username})
+    return {
+        "access_token": token,
+        "token_type": "bearer",
+        "user": {"id": user.id, "username": user.username, "role": user.role},
+    }
+
+
+@app.post("/api/auth/login")
+def login(req: LoginRequest, db: Session = Depends(get_db)):
+    """用户登录"""
+    user = db.query(User).filter(User.username == req.username).first()
+    if not user or not verify_password(req.password, user.password_hash):
+        raise HTTPException(status_code=401, detail="用户名或密码错误")
+
+    token = create_access_token({"sub": user.username})
+    return {
+        "access_token": token,
+        "token_type": "bearer",
+        "user": {"id": user.id, "username": user.username, "role": user.role},
+    }
+
+
+@app.get("/api/auth/me")
+def get_me(current_user: User = Depends(get_current_user)):
+    """获取当前登录用户信息（受 JWT 保护）"""
+    return {
+        "id": current_user.id,
+        "username": current_user.username,
+        "email": current_user.email,
+        "role": current_user.role,
+        "level": current_user.level,
+    }
 
 
 # ==================== 通用 ====================
