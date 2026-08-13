@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import GradientText from '../../components/react-bits/GradientText'
 import FadeContent from '../../components/react-bits/FadeContent'
 import SpotlightCard from '../../components/react-bits/SpotlightCard'
@@ -6,9 +6,10 @@ import Magnet from '../../components/react-bits/Magnet'
 import ClickBurst from '../../components/react-bits/ClickBurst'
 import { callAI } from '../../services/aiService'
 import { addWrongQuestion } from '../../utils/wrongQuestions'
+import { api } from '../../services/api'
 
-// 从知识库提取的题目
-const questions = [
+// 从知识库提取的题目（后端不可用时作为兜底）
+const FALLBACK_QUESTIONS = [
   {
     id: 1, category: 'SQL注入', difficulty: '入门',
     question: 'SQL 注入产生的根本原因是什么？',
@@ -167,11 +168,34 @@ document.getElementById('welcome').innerHTML = "欢迎，" + name;`,
 const cats = ['全部', 'SQL注入', 'XSS', 'CSRF', '文件上传', '命令执行', '密码学', '认证安全', '网络安全']
 
 export default function Practice() {
+  const [questions, setQuestions] = useState(FALLBACK_QUESTIONS)
+  const [loading, setLoading] = useState(true)
   const [activeCat, setActiveCat] = useState('全部')
   const [selected, setSelected] = useState({})    // { questionId: optionIndex }
   const [submitted, setSubmitted] = useState({})   // { questionId: true }
   const [grading, setGrading] = useState({})        // { questionId: true }
   const [feedbacks, setFeedbacks] = useState({})    // { questionId: 'AI feedback text' }
+
+  // 从后端拉取题目
+  useEffect(() => {
+    api.getQuestions({ page_size: 100 })
+      .then(res => {
+        const data = res.data || res
+        if (Array.isArray(data) && data.length > 0) {
+          // 后端返回的题目没有 answer 字段（为了防作弊），需要补充
+          // 这里用本地 fallback 的 answer 作为判题依据
+          const merged = data.map(q => ({
+            ...q,
+            answer: FALLBACK_QUESTIONS.find(f => f.id === q.id)?.answer ?? 0,
+          }))
+          setQuestions(merged)
+        }
+      })
+      .catch(() => {
+        // 后端没启动，用本地数据
+      })
+      .finally(() => setLoading(false))
+  }, [])
 
   const filtered = activeCat === '全部' ? questions : questions.filter(q => q.category === activeCat)
 

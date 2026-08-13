@@ -13,6 +13,7 @@ import SecurityLab from '../pages/SecurityLab/SecurityLab'
 import Login from '../pages/Login/Login'
 import Questions from '../pages/Questions/Questions'
 import LogAnalysis from '../pages/LogAnalysis/LogAnalysis'
+import Admin from '../pages/Admin/Admin'
 
 // 暂时先做空壳页面，后续逐个实现
 function PlaceholderPage({ title }) {
@@ -47,7 +48,7 @@ export default function AppRouter() {
         <Route path="/log-analysis" element={<LogAnalysis />} />
         <Route path="/learning-progress" element={<LearningProgress />} />
         <Route path="/profile" element={<Profile />} />
-        <Route path="/admin" element={<PlaceholderPage title="后台管理" />} />
+        <Route path="/admin" element={<Admin />} />
       </Route>
 
       {/* 根路径重定向到首页 */}
