@@ -1,9 +1,9 @@
 // ============================================================
 // API 请求工具 — 前端访问后端的统一入口
-// 后端地址：http://localhost:8000（FastAPI）
+// 相对路径 /api：开发时由 Vite 代理，部署后由 Nginx 代理
 // ============================================================
 
-const BASE_URL = 'http://localhost:8000'
+const BASE_URL = ''
 
 async function request(path, options = {}) {
   const url = `${BASE_URL}${path}`
