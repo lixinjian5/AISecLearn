@@ -62,7 +62,7 @@ def get_categories():
 
 
 @app.post("/api/questions/{question_id}/check")
-def check_answer(question_id: int, body: dict):
+def check_answer(question_id: int, body: dict, current_user: User = Depends(get_current_user)):
     user_answer = body.get("answer")
     if user_answer is None:
         raise HTTPException(status_code=400, detail="缺少 answer 参数")
@@ -72,7 +72,7 @@ def check_answer(question_id: int, body: dict):
     if not q:
         raise HTTPException(status_code=404, detail="题目不存在")
     is_correct = q["answer"] == user_answer
-    record_progress(1, question_id, str(user_answer), is_correct)
+    record_progress(current_user.id, question_id, str(user_answer), is_correct)
     return {"correct": is_correct, "correct_answer": q["answer"], "explanation": q.get("explanation", "")}
 
 
@@ -109,13 +109,13 @@ def record_progress(user_id: int, question_id: int, user_answer: str, is_correct
 
 
 @app.get("/api/progress")
-def get_progress(user_id: int = 1):
+def get_progress(current_user: User = Depends(get_current_user)):
     pf = DATA_DIR / "learning_records.json"
     if not pf.exists():
         return {"total_answered": 0, "correct": 0, "wrong": 0, "accuracy": 0, "by_category": {}}
     with open(pf, encoding="utf-8") as f:
         records = json.load(f)
-    user_records = [r for r in records if r["user_id"] == user_id]
+    user_records = [r for r in records if r["user_id"] == current_user.id]
     total = len(user_records)
     correct = sum(1 for r in user_records if r["is_correct"])
     with open(DATA_DIR / "questions.json", encoding="utf-8") as f:
@@ -133,12 +133,12 @@ def get_progress(user_id: int = 1):
 
 
 @app.get("/api/progress/history")
-def get_progress_history(user_id: int = 1, limit: int = 50):
+def get_progress_history(current_user: User = Depends(get_current_user), limit: int = 50):
     pf = DATA_DIR / "learning_records.json"
     if not pf.exists(): return []
     with open(pf, encoding="utf-8") as f:
         records = json.load(f)
-    user_records = [r for r in records if r["user_id"] == user_id]
+    user_records = [r for r in records if r["user_id"] == current_user.id]
     with open(DATA_DIR / "questions.json", encoding="utf-8") as f:
         q_map = {q["id"]: q for q in json.load(f)}
     result = []

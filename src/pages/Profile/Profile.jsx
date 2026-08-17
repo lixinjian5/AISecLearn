@@ -3,8 +3,11 @@ import GradientText from '../../components/react-bits/GradientText'
 import FadeContent from '../../components/react-bits/FadeContent'
 import Counter from '../../components/react-bits/Counter'
 import SpotlightCard from '../../components/react-bits/SpotlightCard'
+import { auth } from '../../services/api'
 
 export default function Profile() {
+  const user = auth.getUser()
+  const username = user?.username || '未登录'
   return (
     <div className="flex h-full -m-6">
       {/* 左侧：3D Lanyard 工牌 */}
@@ -30,9 +33,9 @@ export default function Profile() {
                 L
               </div>
               <div>
-                <h2 className="text-lg font-semibold text-white">李欣键</h2>
-                <p className="text-sm text-gray-500">西南民族大学 · 人工智能 · 大二</p>
-                <p className="text-xs text-primary-400 mt-1">Lv.12 · 安全学徒</p>
+                <h2 className="text-lg font-semibold text-white">{username}</h2>
+                <p className="text-sm text-gray-500">AISecLearn 注册用户</p>
+                <p className="text-xs text-primary-400 mt-1">{user?.role === 'admin' ? '管理员' : '安全学员'}</p>
               </div>
             </div>
             <p className="text-sm text-gray-400 leading-relaxed">

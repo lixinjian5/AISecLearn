@@ -7,10 +7,14 @@ import ClickBurst from '../../components/react-bits/ClickBurst'
 import BorderGlow from '../../components/react-bits/BorderGlow'
 import FadeContent from '../../components/react-bits/FadeContent'
 import Lanyard from '../../components/react-bits/Lanyard'
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import { callAI } from '../../services/aiService'
+import { auth, api } from '../../services/api'
 
 export default function Dashboard() {
+  const user = auth.getUser()
+  const username = user?.username || '同学'
+  const [progress, setProgress] = useState({ total_answered: 126, accuracy: 72 })
   // 生成用户信息卡面
   const cardImage = useMemo(() => {
     const canvas = document.createElement('canvas')
@@ -33,20 +37,21 @@ export default function Dashboard() {
     ctx.beginPath(); ctx.arc(80, 80, 40, 0, Math.PI*2); ctx.stroke()
     ctx.beginPath(); ctx.arc(80, 80, 25, 0, Math.PI*2); ctx.stroke()
     ctx.beginPath(); ctx.arc(432, 560, 45, 0, Math.PI*2); ctx.stroke()
-    // 竖排名字
+    // 竖排名字（取用户名前三个字）
+    const nameChars = username.slice(0, 3).split('')
     ctx.fillStyle = '#1a1a1a'
     ctx.font = 'bold 72px "Noto Serif SC", serif'
     ctx.textAlign = 'center'
-    ctx.fillText('李', 256, 240)
-    ctx.fillText('欣', 256, 330)
-    ctx.fillText('键', 256, 420)
+    nameChars.forEach((ch, i) => {
+      ctx.fillText(ch, 256, 240 + i * 90)
+    })
     // 底部
     ctx.fillStyle = 'rgba(26,26,26,0.35)'
     ctx.font = '13px Inter, system-ui'
     ctx.fillText('AISecLearn · 安全学徒', 256, 590)
 
     return canvas.toDataURL()
-  }, [])
+  }, [username])
 
   // AI 学习推荐
   const [recommendation, setRecommendation] = useState('')
@@ -64,6 +69,13 @@ export default function Dashboard() {
     setRecommending(false)
   }
 
+  // 拉取真实学习进度
+  useEffect(() => {
+    api.getProgress()
+      .then(data => setProgress(data))
+      .catch(() => {})
+  }, [])
+
   return (
     <div className="relative">
       {/* 右上角 3D 工牌挂件 */}
@@ -79,7 +91,7 @@ export default function Dashboard() {
         <FadeContent blur={true} duration={600}>
           <div>
             <GradientText colors={['#6366f1', '#06b6d4', '#8b5cf6']} animationSpeed={5} className="text-2xl font-bold">
-              欢迎回来，李欣键 👋
+              欢迎回来，{username} 👋
             </GradientText>
             <ShinyText text="今天继续学习网络安全吧" speed={3} className="text-sm mt-2 block" color="#6b7280" shineColor="#a5b4fc" spread={80} />
           </div>
@@ -88,10 +100,10 @@ export default function Dashboard() {
         {/* ===== 统计卡片 ===== */}
         <div className="grid grid-cols-4 gap-4">
           {[
-            { label: '今日学习进度', value: 68, suffix: '%', icon: '📊', color: 'rgba(99, 102, 241, 0.15)' },
-            { label: '连续学习', value: 7, suffix: ' 天', icon: '🔥', color: 'rgba(6, 182, 212, 0.15)' },
-            { label: '累计学习', value: 32, suffix: ' 小时', icon: '⏱️', color: 'rgba(139, 92, 246, 0.15)' },
-            { label: '完成题目', value: 126, suffix: ' 道', icon: '✅', color: 'rgba(34, 211, 238, 0.15)' },
+            { label: '完成题目', value: progress.total_answered, suffix: ' 道', icon: '✅', color: 'rgba(34, 211, 238, 0.15)' },
+            { label: '答对', value: progress.correct || 0, suffix: ' 道', icon: '🎯', color: 'rgba(6, 182, 212, 0.15)' },
+            { label: '答错', value: progress.wrong || 0, suffix: ' 道', icon: '📝', color: 'rgba(239, 68, 68, 0.10)' },
+            { label: '正确率', value: progress.accuracy || 0, suffix: '%', icon: '📊', color: 'rgba(99, 102, 241, 0.15)' },
           ].map((stat, i) => (
             <FadeContent key={i} blur={true} duration={500} delay={i * 80}>
               <SpotlightCard className="!rounded-2xl !p-5 !bg-gray-900/60 !border-gray-800/30" spotlightColor={stat.color}>
