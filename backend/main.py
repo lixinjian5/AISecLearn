@@ -2,6 +2,9 @@
 AISecLearn 后端 API
 FastAPI + SQLAlchemy ORM（SQLite 本地 / MySQL 生产）
 """
+import os
+import urllib.request
+import urllib.error
 from fastapi import FastAPI, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -311,6 +314,51 @@ def admin_get_stats(current_user: User = Depends(get_current_user), db: Session 
         "users": users, "questions": questions,
         "courses": courses, "learning_records": records,
     }
+
+
+# ==================== AI 代理 API ====================
+# 前端不直接调 DeepSeek，统一走后端代理，保护 API Key
+
+class AIChatRequest(BaseModel):
+    messages: list
+    temperature: float = 0.7
+    max_tokens: int = 2000
+
+
+@app.post("/api/ai/chat")
+def ai_chat(req: AIChatRequest, current_user: User = Depends(get_current_user)):
+    """AI 对话代理：后端持 Key 调 DeepSeek，前端只带 JWT"""
+    api_key = os.getenv("DEEPSEEK_API_KEY", "").strip()
+    if not api_key:
+        raise HTTPException(status_code=500, detail="服务器未配置 DEEPSEEK_API_KEY")
+
+    body = {
+        "model": "deepseek-chat",
+        "messages": req.messages,
+        "temperature": req.temperature,
+        "max_tokens": req.max_tokens,
+        "stream": False,
+    }
+
+    request = urllib.request.Request(
+        "https://api.deepseek.com/v1/chat/completions",
+        data=json.dumps(body).encode("utf-8"),
+        headers={
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {api_key}",
+        },
+        method="POST",
+    )
+
+    try:
+        with urllib.request.urlopen(request, timeout=60) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+            return {"content": data["choices"][0]["message"]["content"]}
+    except urllib.error.HTTPError as e:
+        detail = json.loads(e.read().decode("utf-8")).get("error", {}).get("message", "AI 服务错误")
+        raise HTTPException(status_code=502, detail=f"DeepSeek: {detail}")
+    except Exception as e:
+        raise HTTPException(status_code=502, detail=f"AI 服务不可用: {str(e)}")
 
 
 # ==================== 通用 ====================
