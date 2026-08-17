@@ -5,40 +5,15 @@ import SpotlightCard from '../../components/react-bits/SpotlightCard'
 import Counter from '../../components/react-bits/Counter'
 import { api } from '../../services/api'
 
-const weeklyData = [
-  { day: '一', hours: 1.5, questions: 12 },
-  { day: '二', hours: 2.0, questions: 18 },
-  { day: '三', hours: 0.8, questions: 6 },
-  { day: '四', hours: 2.5, questions: 22 },
-  { day: '五', hours: 1.2, questions: 10 },
-  { day: '六', hours: 3.0, questions: 28 },
-  { day: '日', hours: 2.2, questions: 20 },
-]
-
-const accuracyByCategory = [
-  { category: 'SQL注入', accuracy: 78, color: '#6366f1' },
-  { category: 'XSS', accuracy: 65, color: '#06b6d4' },
-  { category: 'CSRF', accuracy: 82, color: '#8b5cf6' },
-  { category: '文件上传', accuracy: 45, color: '#f59e0b' },
-  { category: '命令执行', accuracy: 58, color: '#ef4444' },
-  { category: '密码学', accuracy: 90, color: '#22c55e' },
-]
-
-const courseList = [
-  { name: 'SQL 注入基础', progress: 68, time: '12小时' },
-  { name: 'XSS 跨站脚本', progress: 42, time: '8小时' },
-  { name: 'CSRF 攻击与防御', progress: 15, time: '3小时' },
-  { name: 'Python 安全编程', progress: 30, time: '6小时' },
-  { name: 'Linux 安全基础', progress: 55, time: '4小时' },
-]
-
 export default function LearningProgress() {
-  const [progress, setProgress] = useState({ total_answered: 126, correct: 91, wrong: 35, accuracy: 72 })
+  const [progress, setProgress] = useState({ total_answered: 0, correct: 0, wrong: 0, accuracy: 0, by_category: {} })
+  const [weekly, setWeekly] = useState([])
+  const [courses, setCourses] = useState([])
 
   useEffect(() => {
-    api.getProgress()
-      .then(data => setProgress(data))
-      .catch(() => {})
+    api.getProgress().then(setProgress).catch(() => {})
+    api.getProgressWeekly().then(setWeekly).catch(() => {})
+    api.getCourses().then(setCourses).catch(() => {})
   }, [])
 
   return (
@@ -77,31 +52,33 @@ export default function LearningProgress() {
         {/* 每周学习趋势 */}
         <FadeContent blur={true} duration={500} delay={200}>
           <SpotlightCard className="!rounded-2xl !p-6 !bg-gray-900/60 !border-gray-800/30" spotlightColor="rgba(99,102,241,0.08)">
-            <h3 className="text-sm font-semibold text-gray-300 mb-4">📈 本周学习时长</h3>
+            <h3 className="text-sm font-semibold text-gray-300 mb-4">📈 本周答题趋势</h3>
             <div className="h-48 flex items-end justify-between gap-3 px-2">
-              {weeklyData.map((d, i) => (
+              {weekly.length > 0 ? weekly.map((d, i) => (
                 <div key={i} className="flex-1 flex flex-col items-center gap-2">
-                  <span className="text-[10px] text-gray-500">{d.hours}h</span>
+                  <span className="text-[10px] text-gray-500">{d.answered}题</span>
                   <div className="w-full flex flex-col justify-end gap-1" style={{ height: '160px' }}>
                     <div
                       className="w-full rounded-t-md bg-gradient-to-t from-primary-500/70 to-cyber-400/40 transition-all"
-                      style={{ height: `${(d.hours / 3) * 100}%` }}
+                      style={{ height: `${Math.min(100, d.answered * 30)}%` }}
                     />
                     <div
-                      className="w-full rounded-t-md bg-gradient-to-t from-amber-600/50 to-amber-400/20"
-                      style={{ height: `${(d.questions / 28) * 50}%` }}
+                      className="w-full rounded-t-md bg-gradient-to-t from-emerald-600/60 to-emerald-400/30"
+                      style={{ height: `${Math.min(100, d.correct * 30)}%` }}
                     />
                   </div>
-                  <span className="text-[10px] text-gray-600">{d.day}</span>
+                  <span className="text-[10px] text-gray-600">{['日','一','二','三','四','五','六'][i]}</span>
                 </div>
-              ))}
+              )) : (
+                <div className="w-full h-full flex items-center justify-center text-xs text-gray-600">暂无本周数据</div>
+              )}
             </div>
             <div className="flex items-center gap-4 mt-4 justify-center">
               <div className="flex items-center gap-1.5 text-[10px] text-gray-500">
-                <span className="w-2.5 h-2.5 rounded-sm bg-gradient-to-t from-primary-500/70 to-cyber-400/40" /> 学习时长
+                <span className="w-2.5 h-2.5 rounded-sm bg-gradient-to-t from-primary-500/70 to-cyber-400/40" /> 答题数
               </div>
               <div className="flex items-center gap-1.5 text-[10px] text-gray-500">
-                <span className="w-2.5 h-2.5 rounded-sm bg-gradient-to-t from-amber-600/50 to-amber-400/20" /> 做题数
+                <span className="w-2.5 h-2.5 rounded-sm bg-gradient-to-t from-emerald-600/60 to-emerald-400/30" /> 答对数
               </div>
             </div>
           </SpotlightCard>
@@ -112,20 +89,24 @@ export default function LearningProgress() {
           <SpotlightCard className="!rounded-2xl !p-6 !bg-gray-900/60 !border-gray-800/30" spotlightColor="rgba(6,182,212,0.08)">
             <h3 className="text-sm font-semibold text-gray-300 mb-4">🎯 分类正确率</h3>
             <div className="space-y-3">
-              {accuracyByCategory.map((item, i) => (
-                <div key={i} className="space-y-1">
-                  <div className="flex justify-between text-xs">
-                    <span className="text-gray-400">{item.category}</span>
-                    <span className="text-gray-500">{item.accuracy}%</span>
+              {Object.keys(progress.by_category || {}).length > 0 ? (
+                Object.entries(progress.by_category).map(([cat, data], i) => (
+                  <div key={i} className="space-y-1">
+                    <div className="flex justify-between text-xs">
+                      <span className="text-gray-400">{cat}</span>
+                      <span className="text-gray-500">{data.accuracy}%（{data.correct}/{data.total}）</span>
+                    </div>
+                    <div className="h-2 rounded-full bg-gray-800 overflow-hidden">
+                      <div
+                        className="h-full rounded-full transition-all"
+                        style={{ width: `${data.accuracy}%`, backgroundColor: ['#6366f1','#06b6d4','#8b5cf6','#f59e0b','#ef4444','#22c55e'][i % 6] }}
+                      />
+                    </div>
                   </div>
-                  <div className="h-2 rounded-full bg-gray-800 overflow-hidden">
-                    <div
-                      className="h-full rounded-full transition-all"
-                      style={{ width: `${item.accuracy}%`, backgroundColor: item.color }}
-                    />
-                  </div>
-                </div>
-              ))}
+                ))
+              ) : (
+                <p className="text-xs text-gray-600 text-center py-4">暂无做题数据</p>
+              )}
             </div>
           </SpotlightCard>
         </FadeContent>
@@ -136,11 +117,11 @@ export default function LearningProgress() {
         <SpotlightCard className="!rounded-2xl !p-6 !bg-gray-900/60 !border-gray-800/30" spotlightColor="rgba(139,92,246,0.08)">
           <h3 className="text-sm font-semibold text-gray-300 mb-4">📚 课程完成情况</h3>
           <div className="space-y-3">
-            {courseList.map((c, i) => (
+            {courses.slice(0, 5).map((c, i) => (
               <div key={i} className="flex items-center gap-4 p-3 rounded-xl bg-white/[0.02] border border-gray-800/20">
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm text-gray-300">{c.name}</p>
-                  <p className="text-xs text-gray-600">{c.time}</p>
+                  <p className="text-sm text-gray-300">{c.title}</p>
+                  <p className="text-xs text-gray-600">{c.lessons} 节课</p>
                 </div>
                 <div className="w-32 flex items-center gap-2">
                   <div className="flex-1 h-1.5 rounded-full bg-gray-800 overflow-hidden">
@@ -153,6 +134,9 @@ export default function LearningProgress() {
                 </div>
               </div>
             ))}
+            {courses.length === 0 && (
+              <p className="text-xs text-gray-600 text-center py-4">暂无课程数据</p>
+            )}
           </div>
         </SpotlightCard>
       </FadeContent>

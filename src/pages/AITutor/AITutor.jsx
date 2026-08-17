@@ -5,9 +5,15 @@ import Magnet from '../../components/react-bits/Magnet'
 import FadeContent from '../../components/react-bits/FadeContent'
 import Counter from '../../components/react-bits/Counter'
 import { useChat } from '../../hooks/useChat'
+import { api } from '../../services/api'
 
 export default function AITutor() {
   const { messages, isLoading, sendMessage } = useChat()
+  const [progress, setProgress] = useState({ total_answered: 0, correct: 0, wrong: 0, accuracy: 0 })
+
+  useEffect(() => {
+    api.getProgress().then(setProgress).catch(() => {})
+  }, [])
   const [input, setInput] = useState('')
   const messagesEndRef = useRef(null)
 
@@ -68,21 +74,21 @@ export default function AITutor() {
 
         <div className="space-y-3 pt-3 border-t border-gray-800/40">
           <div className="flex justify-between items-center text-sm">
-            <span className="text-gray-500">今日学习</span>
+            <span className="text-gray-500">答对</span>
             <span className="text-white font-medium">
-              <Counter value={45} fontSize={16} padding={0} gap={2} textColor="#fff" gradientFrom="#111827" gradientTo="transparent" /> <span className="text-xs text-gray-500">分钟</span>
+              <Counter value={progress.correct || 0} fontSize={16} padding={0} gap={2} textColor="#fff" gradientFrom="#111827" gradientTo="transparent" /> <span className="text-xs text-gray-500">道</span>
             </span>
           </div>
           <div className="flex justify-between items-center text-sm">
-            <span className="text-gray-500">连续天数</span>
+            <span className="text-gray-500">答错</span>
             <span className="text-white font-medium">
-              <Counter value={7} fontSize={16} padding={0} gap={2} textColor="#fff" gradientFrom="#111827" gradientTo="transparent" /> <span className="text-xs text-gray-500">天</span>
+              <Counter value={progress.wrong || 0} fontSize={16} padding={0} gap={2} textColor="#fff" gradientFrom="#111827" gradientTo="transparent" /> <span className="text-xs text-gray-500">道</span>
             </span>
           </div>
           <div className="flex justify-between items-center text-sm">
             <span className="text-gray-500">完成题目</span>
             <span className="text-white font-medium">
-              <Counter value={126} fontSize={16} padding={0} gap={2} textColor="#fff" gradientFrom="#111827" gradientTo="transparent" /> <span className="text-xs text-gray-500">道</span>
+              <Counter value={progress.total_answered} fontSize={16} padding={0} gap={2} textColor="#fff" gradientFrom="#111827" gradientTo="transparent" /> <span className="text-xs text-gray-500">道</span>
             </span>
           </div>
         </div>

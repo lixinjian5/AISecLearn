@@ -3,11 +3,17 @@ import GradientText from '../../components/react-bits/GradientText'
 import FadeContent from '../../components/react-bits/FadeContent'
 import Counter from '../../components/react-bits/Counter'
 import SpotlightCard from '../../components/react-bits/SpotlightCard'
-import { auth } from '../../services/api'
+import { auth, api } from '../../services/api'
+import { useEffect, useState } from 'react'
 
 export default function Profile() {
   const user = auth.getUser()
   const username = user?.username || '未登录'
+  const [progress, setProgress] = useState({ total_answered: 0, correct: 0, wrong: 0, accuracy: 0 })
+
+  useEffect(() => {
+    api.getProgress().then(setProgress).catch(() => {})
+  }, [])
   return (
     <div className="flex h-full -m-6">
       {/* 左侧：3D Lanyard 工牌 */}
@@ -50,10 +56,10 @@ export default function Profile() {
           <h3 className="text-xs font-semibold uppercase tracking-wider text-gray-600 mb-3">学习统计</h3>
           <div className="grid grid-cols-2 gap-3">
             {[
-              { label: '累计学习', value: 32, suffix: ' 小时', icon: '⏱️' },
-              { label: '完成课程', value: 8, suffix: ' 门', icon: '📚' },
-              { label: '完成题目', value: 126, suffix: ' 道', icon: '✅' },
-              { label: '连续学习', value: 7, suffix: ' 天', icon: '🔥' },
+              { label: '完成题目', value: progress.total_answered, suffix: ' 道', icon: '✅' },
+              { label: '答对', value: progress.correct, suffix: ' 道', icon: '🎯' },
+              { label: '答错', value: progress.wrong, suffix: ' 道', icon: '📝' },
+              { label: '正确率', value: progress.accuracy, suffix: '%', icon: '📊' },
             ].map((s, i) => (
               <div key={i} className="p-4 rounded-xl bg-gray-900/60 border border-gray-800/30">
                 <span className="text-lg mb-2 block">{s.icon}</span>

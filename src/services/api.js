@@ -82,6 +82,7 @@ export const api = {
 
   // ============ 学习进度 ============
   getProgress: () => request('/api/progress'),
+  getProgressWeekly: () => request('/api/progress/weekly'),
   getProgressHistory: (limit = 50) => request(`/api/progress/history?limit=${limit}`),
 
   // ============ 健康检查 ============

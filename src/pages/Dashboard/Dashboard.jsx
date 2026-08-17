@@ -14,7 +14,10 @@ import { auth, api } from '../../services/api'
 export default function Dashboard() {
   const user = auth.getUser()
   const username = user?.username || '同学'
-  const [progress, setProgress] = useState({ total_answered: 126, accuracy: 72 })
+  const [progress, setProgress] = useState({ total_answered: 0, correct: 0, wrong: 0, accuracy: 0 })
+  const [weekly, setWeekly] = useState([])
+  const [wrongList, setWrongList] = useState([])
+  const [courseList, setCourseList] = useState([])
   // 生成用户信息卡面
   const cardImage = useMemo(() => {
     const canvas = document.createElement('canvas')
@@ -69,11 +72,14 @@ export default function Dashboard() {
     setRecommending(false)
   }
 
-  // 拉取真实学习进度
+  // 拉取真实学习数据
   useEffect(() => {
-    api.getProgress()
-      .then(data => setProgress(data))
-      .catch(() => {})
+    api.getProgress().then(setProgress).catch(() => {})
+    api.getProgressWeekly().then(setWeekly).catch(() => {})
+    api.getProgressHistory(10).then(history => {
+      setWrongList(history.filter(h => !h.is_correct).slice(0, 3))
+    }).catch(() => {})
+    api.getCourses().then(cs => setCourseList(cs.slice(0, 3))).catch(() => {})
   }, [])
 
   return (
@@ -126,23 +132,22 @@ export default function Dashboard() {
             <div className="rounded-2xl bg-gray-900/60 border border-gray-800/30 p-6">
               <h3 className="text-sm font-semibold text-gray-300 mb-4">📚 继续学习</h3>
               <div className="space-y-3">
-                {[
-                  { name: 'SQL 注入基础', progress: 68, color: 'from-primary-500 to-cyber-500' },
-                  { name: 'XSS 跨站脚本', progress: 42, color: 'from-amber-500 to-orange-500' },
-                  { name: 'CSRF 攻击与防御', progress: 15, color: 'from-emerald-500 to-teal-500' },
-                ].map((course, i) => (
+                {courseList.map((course, i) => (
                   <div key={i} className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.02] border border-gray-800/20 hover:border-gray-700/40 cursor-pointer transition-colors">
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm text-gray-300 truncate">{course.name}</p>
+                      <p className="text-sm text-gray-300 truncate">{course.title}</p>
                       <div className="flex items-center gap-2 mt-2">
                         <div className="flex-1 h-1.5 rounded-full bg-gray-800 overflow-hidden">
-                          <div className={`h-full rounded-full bg-gradient-to-r ${course.color} transition-all`} style={{ width: `${course.progress}%` }} />
+                          <div className={`h-full rounded-full bg-gradient-to-r ${i === 0 ? 'from-primary-500 to-cyber-500' : i === 1 ? 'from-amber-500 to-orange-500' : 'from-emerald-500 to-teal-500'} transition-all`} style={{ width: `${course.progress}%` }} />
                         </div>
                         <span className="text-xs text-gray-600 w-8 text-right">{course.progress}%</span>
                       </div>
                     </div>
                   </div>
                 ))}
+                {courseList.length === 0 && (
+                  <p className="text-xs text-gray-600 text-center py-4">暂无课程数据</p>
+                )}
               </div>
             </div>
           </FadeContent>
@@ -182,12 +187,14 @@ export default function Dashboard() {
             <SpotlightCard className="!rounded-2xl !p-6 !bg-gray-900/60 !border-gray-800/30" spotlightColor="rgba(99, 102, 241, 0.10)">
               <h3 className="text-sm font-semibold text-gray-300 mb-4">📈 学习趋势</h3>
               <div className="h-40 flex items-end justify-between gap-2 px-2">
-                {[35, 42, 28, 55, 48, 62, 68].map((h, i) => (
+                {weekly.length > 0 ? weekly.map((d, i) => (
                   <div key={i} className="flex-1 flex flex-col items-center gap-2">
-                    <div className="w-full rounded-t-md bg-gradient-to-t from-primary-600/60 to-cyber-500/40" style={{ height: `${h}%` }} />
-                    <span className="text-[10px] text-gray-600">{['一','二','三','四','五','六','日'][i]}</span>
+                    <div className="w-full rounded-t-md bg-gradient-to-t from-primary-600/60 to-cyber-500/40" style={{ height: `${Math.min(100, d.answered * 25)}%` }} title={`答对 ${d.correct}/${d.answered}`} />
+                    <span className="text-[10px] text-gray-600">{['日','一','二','三','四','五','六'][i]}</span>
                   </div>
-                ))}
+                )) : (
+                  <div className="w-full h-full flex items-center justify-center text-xs text-gray-600">暂无本周数据</div>
+                )}
               </div>
             </SpotlightCard>
           </FadeContent>
@@ -196,19 +203,21 @@ export default function Dashboard() {
             <SpotlightCard className="!rounded-2xl !p-6 !bg-gray-900/60 !border-gray-800/30" spotlightColor="rgba(239, 68, 68, 0.08)">
               <h3 className="text-sm font-semibold text-gray-300 mb-4">📝 最近错题</h3>
               <div className="space-y-2">
-                {[
-                  { q: '布尔盲注的判断依据是什么？', cat: 'SQL注入', time: '昨天' },
-                  { q: 'XSS 中 DOM 型和反射型的区别？', cat: 'XSS', time: '2天前' },
-                  { q: 'CSRF Token 应该放在哪里？', cat: 'CSRF', time: '3天前' },
-                ].map((item, i) => (
+                {wrongList.map((item, i) => (
                   <div key={i} className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.02] border border-gray-800/20 hover:border-gray-700/40 cursor-pointer transition-colors">
                     <span className="w-6 h-6 rounded-lg bg-red-500/10 flex items-center justify-center text-red-400 text-xs shrink-0">✕</span>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm text-gray-300 truncate">{item.q}</p>
-                      <p className="text-xs text-gray-600 mt-0.5">{item.cat} · {item.time}</p>
+                      <p className="text-sm text-gray-300 truncate">{item.question_text}</p>
+                      <p className="text-xs text-gray-600 mt-0.5">{item.category}</p>
                     </div>
                   </div>
                 ))}
+                {wrongList.length === 0 && (
+                  <div className="flex flex-col items-center py-6 text-center">
+                    <span className="text-2xl mb-2">🎉</span>
+                    <p className="text-xs text-gray-500">太棒了，暂时没有错题</p>
+                  </div>
+                )}
               </div>
             </SpotlightCard>
           </FadeContent>
