@@ -37,6 +37,14 @@ function ProtectedRoute() {
   return <MainLayout />
 }
 
+// 管理员路由：非 admin 跳转首页
+function AdminRoute() {
+  if (auth.getUser()?.role !== 'admin') {
+    return <Navigate to="/dashboard" replace />
+  }
+  return <Admin />
+}
+
 export default function AppRouter() {
   return (
     <Routes>
@@ -59,7 +67,7 @@ export default function AppRouter() {
         <Route path="/log-analysis" element={<LogAnalysis />} />
         <Route path="/learning-progress" element={<LearningProgress />} />
         <Route path="/profile" element={<Profile />} />
-        <Route path="/admin" element={<Admin />} />
+        <Route path="/admin" element={<AdminRoute />} />
       </Route>
 
       {/* 根路径重定向到首页 */}

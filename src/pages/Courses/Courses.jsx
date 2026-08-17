@@ -1,24 +1,10 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import GradientText from '../../components/react-bits/GradientText'
 import FadeContent from '../../components/react-bits/FadeContent'
 import Magnet from '../../components/react-bits/Magnet'
 import MagicBento from '../../components/react-bits/MagicBento'
-
-const allCourses = [
-  { id: 1, title: 'Web 安全基础', category: 'web', difficulty: '入门', progress: 45, desc: 'OWASP Top 10，Web安全核心概念与常见漏洞类型', icon: '🌐' },
-  { id: 2, title: 'SQL 注入深度实战', category: 'web', difficulty: '进阶', progress: 68, desc: '数字型、字符型、盲注、报错注入——从原理到Pikachu靶场实战', icon: '💉' },
-  { id: 3, title: 'XSS 跨站脚本攻击', category: 'web', difficulty: '进阶', progress: 42, desc: '反射型、存储型、DOM型 XSS 全解析，含绕过技巧', icon: '⚠️' },
-  { id: 4, title: 'CSRF 攻击与防御', category: 'web', difficulty: '入门', progress: 15, desc: '跨站请求伪造原理与 Token 防御机制深度剖析', icon: '🛡️' },
-  { id: 5, title: '文件上传漏洞', category: 'web', difficulty: '高级', progress: 8, desc: '前端绕过、后缀绕过、MIME绕过、条件竞争完整攻击链', icon: '📤' },
-  { id: 6, title: '命令执行与代码注入', category: 'system', difficulty: '高级', progress: 0, desc: 'OS命令注入、反序列化漏洞的检测、利用与防御', icon: '💻' },
-  { id: 7, title: 'Python 安全编程', category: 'dev', difficulty: '进阶', progress: 30, desc: 'Python 常见安全陷阱、防御性编程与代码审计技巧', icon: '🐍' },
-  { id: 8, title: 'Linux 安全基础', category: 'system', difficulty: '入门', progress: 55, desc: '权限管理、iptables、日志审计与服务器安全加固', icon: '🐧' },
-  { id: 9, title: '网络攻防实战', category: 'system', difficulty: '高级', progress: 12, desc: 'Nmap端口扫描、Wireshark流量分析、中间人攻击防御', icon: '🔍' },
-  { id: 10, title: '密码学基础', category: 'dev', difficulty: '进阶', progress: 0, desc: 'AES/RSA/ECDH、哈希加盐、数字证书与 PKI 体系', icon: '🔐' },
-  { id: 11, title: '认证与授权安全', category: 'web', difficulty: '进阶', progress: 20, desc: 'JWT 攻击面、OAuth 2.0 漏洞、Session 安全全解', icon: '🔑' },
-  { id: 12, title: '日志分析与应急响应', category: 'system', difficulty: '高级', progress: 0, desc: '攻击溯源、ELK日志分析、应急响应完整流程与工具链', icon: '📋' },
-]
+import { api } from '../../services/api'
 
 const diffColors = {
   '入门': 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
@@ -34,8 +20,14 @@ const categories = [
 ]
 
 export default function Courses() {
+  const [courses, setCourses] = useState([])
   const [activeCategory, setActiveCategory] = useState('all')
-  const filtered = activeCategory === 'all' ? allCourses : allCourses.filter(c => c.category === activeCategory)
+
+  useEffect(() => {
+    api.getCourses().then(setCourses).catch(() => setCourses([]))
+  }, [])
+
+  const filtered = activeCategory === 'all' ? courses : courses.filter(c => c.category === activeCategory)
 
   return (
     <div className="p-6 space-y-6">

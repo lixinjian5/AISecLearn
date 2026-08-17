@@ -199,13 +199,20 @@ export default function Practice() {
 
   const filtered = activeCat === '全部' ? questions : questions.filter(q => q.category === activeCat)
 
-  // 提交单题 → AI 批改
+  // 提交单题 → 记录到后端 + AI 批改
   const handleSubmit = async (q) => {
     if (selected[q.id] === undefined) return
     const isCorrect = selected[q.id] === q.answer
     if (!isCorrect) addWrongQuestion(q, selected[q.id])
     setSubmitted(prev => ({ ...prev, [q.id]: true }))
     setGrading(prev => ({ ...prev, [q.id]: true }))
+
+    // 关键：写入后端学习记录（否则进度永远是 0）
+    try {
+      await api.checkAnswer(q.id, selected[q.id])
+    } catch {
+      // 后端不可用时静默失败，不阻塞 AI 批改
+    }
 
     try {
       const prompt = `你是一位网络安全老师。请批改学生的答案。

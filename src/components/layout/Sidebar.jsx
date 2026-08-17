@@ -40,7 +40,6 @@ const recordNavItems = [
 
 const bottomNavItems = [
   { to: '/profile',  label: '用户中心', icon: UserIcon },
-  { to: '/admin',    label: '后台管理', icon: ChartIcon },
 ]
 
 function NavItem({ to, label, icon: Icon }) {
@@ -138,6 +137,11 @@ export default function Sidebar() {
           {bottomNavItems.map(item => (
             <NavItem key={item.to} {...item} />
           ))}
+
+          {/* 后台管理 — 仅管理员可见 */}
+          {auth.getUser()?.role === 'admin' && (
+            <NavItem to="/admin" label="后台管理" icon={ChartIcon} />
+          )}
 
           <div className="flex items-center gap-3 px-4 py-2.5 mt-1 rounded-lg bg-white/[0.03]">
             <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center text-white text-xs font-bold shadow-lg shadow-primary-500/20">

@@ -45,7 +45,8 @@ def q_to_dict(q: Question) -> dict:
 
 @app.get("/api/questions")
 def get_questions(category: Optional[str] = None, difficulty: Optional[str] = None,
-                  page: int = 1, page_size: int = 20, db: Session = Depends(get_db)):
+                  page: int = 1, page_size: int = 20, include_answer: bool = False,
+                  db: Session = Depends(get_db)):
     """获取题目列表，支持按分类/难度筛选和分页"""
     query = db.query(Question)
     if category:
@@ -56,9 +57,16 @@ def get_questions(category: Optional[str] = None, difficulty: Optional[str] = No
     total = query.count()
     questions = query.offset((page - 1) * page_size).limit(page_size).all()
 
+    data = []
+    for q in questions:
+        d = q_to_dict(q)
+        if include_answer:
+            d["answer"] = q.answer  # 题库浏览模式才返回答案
+        data.append(d)
+
     return {
         "total": total, "page": page, "page_size": page_size,
-        "data": [q_to_dict(q) for q in questions],
+        "data": data,
     }
 
 
@@ -270,6 +278,38 @@ def get_me(current_user: User = Depends(get_current_user)):
         "email": current_user.email,
         "role": current_user.role,
         "level": current_user.level,
+    }
+
+
+# ==================== 后台管理 API ====================
+
+@app.get("/api/admin/users")
+def admin_get_users(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    """获取用户列表（仅管理员）"""
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="需要管理员权限")
+
+    users = db.query(User).all()
+    return [{
+        "id": u.id, "username": u.username, "role": u.role,
+        "level": u.level, "created_at": u.created_at.isoformat() if u.created_at else None,
+    } for u in users]
+
+
+@app.get("/api/admin/stats")
+def admin_get_stats(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    """平台统计（仅管理员）"""
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="需要管理员权限")
+
+    users = db.query(User).count()
+    questions = db.query(Question).count()
+    courses = db.query(Course).count()
+    records = db.query(LearningRecord).count()
+
+    return {
+        "users": users, "questions": questions,
+        "courses": courses, "learning_records": records,
     }
 
 

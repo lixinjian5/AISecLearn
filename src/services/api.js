@@ -68,8 +68,7 @@ export const api = {
   getQuestions: (params = {}) => {
     const query = new URLSearchParams(params).toString()
     return request(`/api/questions${query ? '?' + query : ''}`)
-  },
-  getCategories: () => request('/api/questions/categories'),
+  },  getCategories: () => request('/api/questions/categories'),
   checkAnswer: (questionId, answer) =>
     request(`/api/questions/${questionId}/check`, {
       method: 'POST',
@@ -84,6 +83,10 @@ export const api = {
   getProgress: () => request('/api/progress'),
   getProgressWeekly: () => request('/api/progress/weekly'),
   getProgressHistory: (limit = 50) => request(`/api/progress/history?limit=${limit}`),
+
+  // ============ 后台管理（仅 admin） ============
+  getAdminUsers: () => request('/api/admin/users'),
+  getAdminStats: () => request('/api/admin/stats'),
 
   // ============ 健康检查 ============
   health: () => request('/api/health'),

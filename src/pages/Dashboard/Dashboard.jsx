@@ -64,10 +64,15 @@ export default function Dashboard() {
     setRecommending(true)
     setRecommendation('')
     try {
-      const reply = await callAI([{ role: 'user', content: '你是 AISecLearn 的 AI 学习助手。用户今天打开首页，请根据以下学习数据，用中文推荐一个今天最值得学习的内容。数据：SQL注入68%、XSS 42%、CSRF 15%、文件上传8%。语气友好简洁，3句话以内，直接给建议不要寒暄。' }], { temperature: 0.7, maxTokens: 200 })
+      // 用真实进度数据生成推荐
+      const byCat = progress.by_category || {}
+      const catSummary = Object.keys(byCat).length > 0
+        ? Object.entries(byCat).map(([cat, d]) => `${cat}正确率${d.accuracy}%`).join('、')
+        : '还没有做题记录'
+      const reply = await callAI([{ role: 'user', content: `你是 AISecLearn 的 AI 学习助手。用户今天打开首页，请根据以下学习数据，用中文推荐一个今天最值得学习的内容。学习数据：共答题${progress.total_answered}道，正确率${progress.accuracy}%，各分类${catSummary}。语气友好简洁，3句话以内，直接给建议不要寒暄。` }], { temperature: 0.7, maxTokens: 200 })
       setRecommendation(reply)
     } catch (e) {
-      setRecommendation('💡 建议今天复习 XSS，你的进度还差 58%，从反射型开始巩固。')
+      setRecommendation('💡 建议先从「Web 安全基础」开始，了解 OWASP Top 10 核心漏洞。')
     }
     setRecommending(false)
   }
