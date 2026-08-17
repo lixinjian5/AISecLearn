@@ -3,6 +3,21 @@ import Particles from '../react-bits/Particles'
 import Threads from '../react-bits/Threads'
 import Magnet from '../react-bits/Magnet'
 import ClickBurst from '../react-bits/ClickBurst'
+import { auth } from '../../services/api'
+
+// 当前登录用户信息
+function getUsername() {
+  const user = auth.getUser()
+  return user?.username || '未登录'
+}
+function getInitial() {
+  const name = getUsername()
+  return name ? name[0].toUpperCase() : '?'
+}
+function getUserRole() {
+  const user = auth.getUser()
+  return user?.role === 'admin' ? '管理员' : '安全学员'
+}
 // 导航项配置
 const mainNavItems = [
   { to: '/dashboard',       label: '首页',       icon: HomeIcon },
@@ -126,11 +141,11 @@ export default function Sidebar() {
 
           <div className="flex items-center gap-3 px-4 py-2.5 mt-1 rounded-lg bg-white/[0.03]">
             <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center text-white text-xs font-bold shadow-lg shadow-primary-500/20">
-              L
+              {getInitial()}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-gray-300 truncate">李欣键</p>
-              <p className="text-xs text-gray-500">Lv.12 · 安全学徒</p>
+              <p className="text-sm font-medium text-gray-300 truncate">{getUsername()}</p>
+              <p className="text-xs text-gray-500">{getUserRole()}</p>
             </div>
           </div>
         </div>

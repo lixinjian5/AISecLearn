@@ -1,5 +1,6 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 import MainLayout from '../layouts/MainLayout'
+import { auth } from '../services/api'
 import AITutor from '../pages/AITutor/AITutor'
 import Dashboard from '../pages/Dashboard/Dashboard'
 import Courses from '../pages/Courses/Courses'
@@ -28,6 +29,14 @@ function PlaceholderPage({ title }) {
   )
 }
 
+// 路由守卫：未登录跳转登录页
+function ProtectedRoute() {
+  if (!auth.isLoggedIn()) {
+    return <Navigate to="/login" replace />
+  }
+  return <MainLayout />
+}
+
 export default function AppRouter() {
   return (
     <Routes>
@@ -35,8 +44,8 @@ export default function AppRouter() {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Login />} />
 
-      {/* 主应用 — 带 Sidebar + Header 的布局 */}
-      <Route element={<MainLayout />}>
+      {/* 主应用 — 带 Sidebar + Header 的布局，需登录 */}
+      <Route element={<ProtectedRoute />}>
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/ai-tutor" element={<AITutor />} />
         <Route path="/courses" element={<Courses />} />

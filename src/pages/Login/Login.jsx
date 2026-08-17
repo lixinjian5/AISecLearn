@@ -1,19 +1,48 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import Particles from '../../components/react-bits/Particles'
 import SpecularButton from '../../components/react-bits/SpecularButton'
 import BorderGlow from '../../components/react-bits/BorderGlow'
 import GradientText from '../../components/react-bits/GradientText'
 import ShinyText from '../../components/react-bits/ShinyText'
 import FadeContent from '../../components/react-bits/FadeContent'
+import { api, auth } from '../../services/api'
 
 export default function Login() {
   const [isLogin, setIsLogin] = useState(true)
+  const [username, setUsername] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
   const navigate = useNavigate()
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    navigate('/dashboard')
+    setError('')
+    setLoading(true)
+
+    try {
+      let res
+      if (isLogin) {
+        res = await api.login(username, password)
+      } else {
+        res = await api.register(username, email, password)
+      }
+
+      // 保存 token 和用户信息
+      auth.saveToken(res.access_token, res.user)
+      navigate('/dashboard')
+    } catch (err) {
+      setError(err.message || '操作失败，请重试')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const switchMode = () => {
+    setIsLogin(!isLogin)
+    setError('')
   }
 
   return (
@@ -68,13 +97,13 @@ export default function Login() {
               {/* 切换标签 */}
               <div className="flex bg-gray-900/60 rounded-xl p-1 mb-6">
                 <button
-                  onClick={() => setIsLogin(true)}
+                  onClick={() => switchMode()}
                   className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${isLogin ? 'bg-primary-600/30 text-primary-400' : 'text-gray-600 hover:text-gray-400'}`}
                 >
                   登录
                 </button>
                 <button
-                  onClick={() => setIsLogin(false)}
+                  onClick={() => switchMode()}
                   className={`flex-1 py-2 rounded-lg text-sm font-medium transition-all ${!isLogin ? 'bg-primary-600/30 text-primary-400' : 'text-gray-600 hover:text-gray-400'}`}
                 >
                   注册
@@ -83,32 +112,48 @@ export default function Login() {
 
               {/* 表单 */}
               <form onSubmit={handleSubmit} className="space-y-4">
+                <div>
+                  <label className="text-xs text-gray-500 mb-1 block">用户名</label>
+                  <input
+                    type="text"
+                    value={username}
+                    onChange={e => setUsername(e.target.value)}
+                    placeholder="请输入用户名"
+                    required
+                    className="w-full bg-gray-900/60 border border-gray-800/40 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-700 outline-none focus:border-primary-500/50 transition-colors"
+                  />
+                </div>
                 {!isLogin && (
                   <div>
-                    <label className="text-xs text-gray-500 mb-1 block">用户名</label>
+                    <label className="text-xs text-gray-500 mb-1 block">邮箱</label>
                     <input
-                      type="text"
-                      placeholder="请输入用户名"
+                      type="email"
+                      value={email}
+                      onChange={e => setEmail(e.target.value)}
+                      placeholder="请输入邮箱"
+                      required
                       className="w-full bg-gray-900/60 border border-gray-800/40 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-700 outline-none focus:border-primary-500/50 transition-colors"
                     />
                   </div>
                 )}
                 <div>
-                  <label className="text-xs text-gray-500 mb-1 block">邮箱</label>
-                  <input
-                    type="email"
-                    placeholder="请输入邮箱"
-                    className="w-full bg-gray-900/60 border border-gray-800/40 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-700 outline-none focus:border-primary-500/50 transition-colors"
-                  />
-                </div>
-                <div>
                   <label className="text-xs text-gray-500 mb-1 block">密码</label>
                   <input
                     type="password"
+                    value={password}
+                    onChange={e => setPassword(e.target.value)}
                     placeholder="请输入密码"
+                    required
                     className="w-full bg-gray-900/60 border border-gray-800/40 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-700 outline-none focus:border-primary-500/50 transition-colors"
                   />
                 </div>
+
+                {/* 错误提示 */}
+                {error && (
+                  <div className="text-xs text-red-400 bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-2.5">
+                    {error}
+                  </div>
+                )}
 
                 <div className="pt-2">
                   <SpecularButton
@@ -124,7 +169,7 @@ export default function Login() {
                     autoAnimate={true}
                     onClick={handleSubmit}
                   >
-                    {isLogin ? '登录' : '注册'}
+                    {loading ? '处理中...' : (isLogin ? '登录' : '注册')}
                   </SpecularButton>
                 </div>
               </form>
@@ -132,7 +177,7 @@ export default function Login() {
               <p className="text-center text-xs text-gray-600 mt-6">
                 {isLogin ? '还没有账号？' : '已有账号？'}
                 <button
-                  onClick={() => setIsLogin(!isLogin)}
+                  onClick={() => switchMode()}
                   className="text-primary-400 hover:text-primary-300 ml-1 transition-colors"
                 >
                   {isLogin ? '立即注册' : '去登录'}
