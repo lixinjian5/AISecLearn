@@ -5,6 +5,7 @@
 [![Frontend](https://img.shields.io/badge/Frontend-React%2018%20%2B%20Vite-61dafb)](https://react.dev)
 [![Backend](https://img.shields.io/badge/Backend-FastAPI-009688)](https://fastapi.tiangolo.com)
 [![UI](https://img.shields.io/badge/UI-React%20Bits%20%2B%20Tailwind-6366f1)](https://reactbits.dev)
+<img width="2880" height="1920" alt="image" src="https://github.com/user-attachments/assets/a0f9f6f8-0db9-4ea8-90fb-e7ceb1cddf37" />
 
 ## 📖 项目简介
 
